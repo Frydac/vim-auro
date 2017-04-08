@@ -58,7 +58,6 @@ endfunction
 
 
 "There are 2 possible filenames for a header, in inc or src
-"Presumes auro_split.ext = c or cpp
 function! AuroHppNames(auro_split)
     let l:result = {'inc': '', 'src': ''}
 
@@ -74,7 +73,6 @@ function! AuroHppNames(auro_split)
 endfunction
 
 
-"Presumes auro_split.ext = h or hpp
 function! AuroCppName(auro_split)
     let l:result = ''
 
@@ -86,7 +84,7 @@ function! AuroCppName(auro_split)
     return l:result
 endfunction
 
-"Removes the _tests from the file
+"Removes '_tests' from the file
 function! AuroRemove_tests(file)
     let l:file = a:file
     let l:pos = match(l:file, "_tests" ) 
@@ -97,11 +95,18 @@ function! AuroRemove_tests(file)
     return l:file
 endfunction
 
-"TODO: first find header file, than use that type
 function! AuroTestCppName(auro_split)
-    let l:ns_part = JoinDir(a:auro_split.namespaces)
-    let l:result = a:auro_split.module . '/test/' . a:auro_split.type . l:ns_part . '/' . a:auro_split.file . '_tests.cpp'
+    " first find corresponding header to see if test should be in 'inc' or
+    " 'src'
+    let l:hpp_fns = AuroHppNames(a:auro_split)
+    if filereadable(l:hpp_fns.inc)
+        let l:type = 'inc'
+    else
+        let l:type = 'src'
+    endif
 
+    let l:ns_part = JoinDir(a:auro_split.namespaces)
+    let l:result = a:auro_split.module . '/test/' . l:type . l:ns_part . '/' . a:auro_split.file . '_tests.cpp'
     return l:result
 endfunction
 
@@ -127,9 +132,9 @@ function! PrintSplit(split)
     endfor
     echom 'file:' . a:split.file
     echom 'ext:' . a:split.ext
-
 endfunction
 
+"TODO: add option for tab, split, vsplit
 function! OpenFile(file)
     execute ":e " . a:file
 endfunction
@@ -137,26 +142,27 @@ endfunction
 
 function! OpenCxxFile(file)
     if(filereadable(a:file))
-        Openfile(a:file)
+        call OpenFile(a:file)
     else
         if input(a:file . " does not exist, create? (y/n): ") == 'y'
-            Openfile(a:file)
+            call OpenFile(a:file)
         endif
     endif
 endfunction
 
 
+"Open or create one of the .hxx files in the given array
 function! OpenHxxFile(files)
-    if(!filereadable(l:hpp_fns.inc) && !filereadable(l:hpp_fns.src))
-        let l:result input("Following files do not exist:\ni: " . files.inc . "\ns: " . files.src . "\nCreate? (i/s/n): ")
+    if !filereadable(a:files.inc) && !filereadable(a:files.src)
+        let l:result = input("Following files do not exist:\ni: " . files.inc . "\ns: " . files.src . "\nCreate? (i/s/n): ")
         if l:result ==? 'i' 
             call OpenFile(a:files.inc)
         elseif l:result ==? 's'
             call OpenFile(a:files.src)
         endif
-    elseif filereadable(l:hpp_fns.src)
+    elseif filereadable(a:files.src)
         call OpenFile(a:files.src)
-    elseif filereadable(l:hpp_fns.inc)
+    elseif filereadable(a:files.inc)
         call OpenFile(a:files.inc)
     endif
 
@@ -186,7 +192,3 @@ function! c#auro_source_files#OpenHxxFile()
     call OpenHxxFile(l:hpp_fns)
 endfunction
 
-function! AuroGoToHeader()
-    let l:split = AuroSplit(expand('%'))
-
-endfunction
