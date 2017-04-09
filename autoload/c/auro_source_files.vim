@@ -87,8 +87,13 @@ endfunction
 "Removes '_tests' from the file
 function! AuroRemove_tests(file)
     let l:file = a:file
+    let l:file_len = len(l:file)
+    if l:file_len < 7 
+        "cannot be a _tests file
+        return l:file
+    endif
     let l:pos = match(l:file, "_tests" ) 
-    let l:expected_pos = len(a:file) - 6
+    let l:expected_pos = l:file_len - 6
     if(l:pos == l:expected_pos)
         let l:file = l:file[:l:pos-1]
     endif
@@ -119,6 +124,7 @@ function! c#auro_source_files#Test()
     "echom 'test_name: ' . l:test_name
 
     let l:split = AuroSplit(expand('%'))
+    call PrintSplit(l:split)
     let l:split.file = AuroRemove_tests(l:split.file)
     call PrintSplit(l:split)
 
@@ -135,8 +141,16 @@ function! PrintSplit(split)
 endfunction
 
 "TODO: add option for tab, split, vsplit
+"TODO: check if buffer already open, only necessary when noautowrite(all) is
+"set (I think)
 function! OpenFile(file)
+    let containing_dir = fnamemodify(a:file, ':h')
+    if(!isdirectory(containing_dir))
+        echom 'Creating dir: ' . containing_dir
+        call mkdir(containing_dir, 'p')
+    endif
     execute ":e " . a:file
+    execute ":w"
 endfunction
 
 
@@ -151,7 +165,7 @@ function! OpenCxxFile(file)
 endfunction
 
 
-"Open or create one of the .hxx files in the given array
+"Open or create one of the .hxx files in the given dictionary
 function! OpenHxxFile(files)
     if !filereadable(a:files.inc) && !filereadable(a:files.src)
         let l:result = input("Following files do not exist:\ni: " . files.inc . "\ns: " . files.src . "\nCreate? (i/s/n): ")
