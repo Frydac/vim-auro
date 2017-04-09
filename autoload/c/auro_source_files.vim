@@ -163,7 +163,10 @@ function! OpenCxxFile(file)
     if(filereadable(a:file))
         call OpenFile(a:file)
     else
-        if input(a:file . " does not exist, create? (y/n): ") == 'y'
+        inputsave()
+        result = input(a:file . " does not exist, create? (y/n): ") == 'y'
+        inputrestore()
+        if result ==? y
             call OpenFile(a:file)
         endif
     endif
