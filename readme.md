@@ -26,7 +26,6 @@ When the file to jump to doesn't exist, a prompt will ask you if you want to cre
 ## Known issues
 * Can't jump from a '\_tests.cpp' file to corresponding `.c` or .h file
 * When header is in `inc` then it expects the `\_tests.cpp` file to be in `inc` as well (which you probably want most of the time)
-* folders are not created when creating new files.
 
 ## Whishlist
 * fix known issues
