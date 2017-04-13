@@ -20,6 +20,15 @@ By default `<leader>` is `\`, see `:h mapleader`
 * `:AuroTest` or  
   `<leader>3`  
   open \_tests.cpp file from corresponding .h, .hpp, .c or .cpp file
+* `:AuroImplHpp` or  
+  `<leader>4`  
+  open Impl.hpp file from corresponding .h, .hpp, .c or .cpp file
+* `:AuroImplCpp` or  
+  `<leader>5`  
+  open Impl.cpp file from corresponding .h, .hpp, .c or .cpp file
+* `:AuroImplTest` or  
+  `<leader>6`  
+  open Impl\_tests.cpp file from corresponding .h, .hpp, .c or .cpp file
 
 When the file to jump to doesn't exist, a prompt will ask you if you want to create that file.
 

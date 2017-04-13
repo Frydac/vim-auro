@@ -1,8 +1,46 @@
 "Depending on the current buffer, jump to, or create files like:
 " path/core-dir/inc/dir/file.hpp
 " path/core-dir/src/dir/file.cpp
+" path/core-dir/src/dir/fileImpl.hpp
+" path/core-dir/src/dir/fileImpl.cpp
 " path/core-dir/test/inc/dir/file_tests.cpp
 " path/core-dir/test/src/dir/file_tests.cpp
+
+function! c#auro_source_files#OpenTestFile()
+    let split = AuroSplit(expand('%'))
+    let test_fn = AuroTestCppName(split)
+    call OpenOrCreateSingleFile(test_fn)
+endfunction
+
+function! c#auro_source_files#OpenCxxFile()
+    let split = AuroSplit(expand('%'))
+    let cpp_fn = AuroCppName(split)
+    call OpenOrCreateSingleFile(cpp_fn)
+endfunction
+
+function! c#auro_source_files#OpenHxxFile()
+    let split = AuroSplit(expand('%'))
+    let hpp_fns = AuroHppNames(split)
+    call OpenOrCreateSrcOrIncFile(hpp_fns)
+endfunction
+
+function! c#auro_source_files#OpenImplHppFile()
+    let split = AuroSplit(expand('%'))
+    let impl_cpp_fn = AuroImplHppName(split)
+    call OpenOrCreateSingleFile(impl_cpp_fn)
+endfunction
+
+function! c#auro_source_files#OpenImplCppFile()
+    let split = AuroSplit(expand('%'))
+    let impl_cpp_fn = AuroImplCppName(split)
+    call OpenOrCreateSingleFile(impl_cpp_fn)
+endfunction
+
+function! c#auro_source_files#OpenImplTestFile()
+    let split = AuroSplit(expand('%'))
+    let impl_cpp_fn = AuroImplTestName(split)
+    call OpenOrCreateSingleFile(impl_cpp_fn)
+endfunction
 
 " Create dictionary from filename with following keys:
 " module     = path to module name
@@ -37,25 +75,6 @@ function! AuroSplit(fn)
     return result
 endfunction
 
-function! PrintSplit(split)
-    echom 'module:' . a:split.module
-    echom 'type:' . a:split.type
-    for ns in a:split.namespaces
-        echom 'namespace: ' . ns
-    endfor
-    echom 'file:' . a:split.file
-    echom 'ext:' . a:split.ext
-endfunction
-
-"expand array of dir names to path
-function! JoinDir(dir_array)
-    let result = ""
-    for dir in a:dir_array
-        let result = result . '/' . dir
-    endfor
-    return result
-endfunction
-
 " return c or cpp
 function! CxxExt(ext)
     return {'h': 'c', 'c': 'c', 'hpp': 'cpp', 'cpp': 'cpp'}[tolower(a:ext)]
@@ -66,15 +85,17 @@ function! HxxExt(ext)
     return {'c': 'h', 'h': 'h', 'cpp': 'hpp', 'hpp': 'hpp'}[tolower(a:ext)]
 endfunction
 
-
 "There are 2 possible filenames for a header, in inc or src
 function! AuroHppNames(auro_split)
     let result = {'inc': '', 'src': ''}
 
+    let file = AuroRemove_tests(a:auro_split.file)
+    let file = AuroRemove_Impl(file)
+
     let ns_part = JoinDir(a:auro_split.namespaces)
     let h_ext = HxxExt(a:auro_split.ext)
     " common part for both inc and src
-    let common = ns_part . '/' . a:auro_split.file . '.' . h_ext
+    let common = ns_part . '/' . file . '.' . h_ext
 
     let result.inc = a:auro_split.module . '/inc' . common
     let result.src = a:auro_split.module . '/src' . common
@@ -82,15 +103,62 @@ function! AuroHppNames(auro_split)
     return result
 endfunction
 
-
 function! AuroCppName(auro_split)
     let result = ''
+
+    let file = AuroRemove_tests(a:auro_split.file)
+    let file = AuroRemove_Impl(file)
 
     let c_ext = CxxExt(a:auro_split.ext)
     let ns_part = JoinDir(a:auro_split.namespaces)
 
-    let result = a:auro_split.module . '/src' . ns_part . '/' . a:auro_split.file . '.' . c_ext
+    let result = a:auro_split.module . '/src' . ns_part . '/' . file . '.' . c_ext
 
+    return result
+endfunction
+
+function! AuroTestCppName(auro_split)
+    " first find corresponding header to see if test should be in 'inc' or
+    " 'src'
+    let hpp_fns = AuroHppNames(a:auro_split)
+    if filereadable(hpp_fns.inc)
+        let type = 'inc'
+    else
+        let type = 'src'
+    endif
+
+    let file = AuroRemove_tests(a:auro_split.file)
+    let file = AuroRemove_Impl(file)
+
+    let ns_part = JoinDir(a:auro_split.namespaces)
+    let result = a:auro_split.module . '/test/' . type . ns_part . '/' . file . '_tests.cpp'
+    return result
+endfunction
+
+function! AuroImplHppName(auro_split)
+    let type = '/src'
+    let ns_part = JoinDir(a:auro_split.namespaces)
+    let file = AuroRemove_tests(a:auro_split.file)
+    let file = AuroRemove_Impl(file)
+    let result = a:auro_split.module . type . ns_part . '/' . file . 'Impl.hpp'
+    return result
+endfunction
+
+function! AuroImplCppName(auro_split)
+    let type = '/src'
+    let ns_part = JoinDir(a:auro_split.namespaces)
+    let file = AuroRemove_tests(a:auro_split.file)
+    let file = AuroRemove_Impl(file)
+    let result = a:auro_split.module . type . ns_part . '/' . file . 'Impl.cpp'
+    return result
+endfunction
+
+function! AuroImplTestName(auro_split)
+    let type = '/src'
+    let ns_part = JoinDir(a:auro_split.namespaces)
+    let file = AuroRemove_tests(a:auro_split.file)
+    let file = AuroRemove_Impl(file)
+    let result = a:auro_split.module . '/test/' . type . ns_part . '/' . file . 'Impl_tests.cpp'
     return result
 endfunction
 
@@ -110,34 +178,47 @@ function! AuroRemove_tests(file)
     return file
 endfunction
 
-function! AuroTestCppName(auro_split)
-    " first find corresponding header to see if test should be in 'inc' or
-    " 'src'
-    let hpp_fns = AuroHppNames(a:auro_split)
-    if filereadable(hpp_fns.inc)
-        let type = 'inc'
-    else
-        let type = 'src'
+function! AuroRemove_Impl(file)
+    let file = a:file
+    let file_len = len(file)
+    if file_len < 5
+        return file
     endif
-
-    let ns_part = JoinDir(a:auro_split.namespaces)
-    let result = a:auro_split.module . '/test/' . type . ns_part . '/' . a:auro_split.file . '_tests.cpp'
-    return result
+    let pos = match(file,"Impl")
+    let expected_pos = file_len - 4
+    if(pos == expected_pos)
+        let file = file[:pos-1]
+    endif
+    return file
 endfunction
 
-function! c#auro_source_files#Test()
-    "let split = AuroSplit(expand('%'))
-    "echom 'Module: ' . split.module . ' * Type: '. split.type . ' * namespaces: ' . split.namespaces[0] .  ' * File: ' . split.file . ' * Ext: ' . split.ext
-    "let hpp_names = AuroHppNames(split)
-    "echom 'hpp_inc: ' . hpp_names.inc . ' * hpp_src: ' . hpp_names.src
-    "let test_name = AuroTestCppName(split)
-    "echom 'test_name: ' . test_name
+function! OpenOrCreateSingleFile(file)
+    if(filereadable(a:file))
+        call OpenFile(a:file)
+    else
+        call inputsave()
+        let result = input(a:file . " does not exist, create? (y / n or <esc>): ")
+        call inputrestore()
+        if result ==? 'y'
+            call OpenFile(a:file)
+        endif
+    endif
+endfunction
 
-    let split = AuroSplit(expand('%'))
-    call PrintSplit(split)
-    let split.file = AuroRemove_tests(split.file)
-    call PrintSplit(split)
-
+"Open or create one of the .hxx files in the given dictionary
+function! OpenOrCreateSrcOrIncFile(files)
+    if !filereadable(a:files.inc) && !filereadable(a:files.src)
+        let result = input("Following files do not exist:\ni: " . files.inc . "\ns: " . files.src . "\nCreate? (i/s/n): ")
+        if result ==? 'i' 
+            call OpenFile(a:files.inc)
+        elseif result ==? 's'
+            call OpenFile(a:files.src)
+        endif
+    elseif filereadable(a:files.src)
+        call OpenFile(a:files.src)
+    elseif filereadable(a:files.inc)
+        call OpenFile(a:files.inc)
+    endif
 endfunction
 
 "TODO: add option for tab, split, vsplit
@@ -158,59 +239,35 @@ function! OpenFile(file)
     endif
 endfunction
 
-
-function! OpenCxxFile(file)
-    if(filereadable(a:file))
-        call OpenFile(a:file)
-    else
-        call inputsave()
-        let result = input(a:file . " does not exist, create? (y/n): ")
-        call inputrestore()
-        if result ==? 'y'
-            call OpenFile(a:file)
-        endif
-    endif
+function! PrintSplit(split)
+    echom 'module:' . a:split.module
+    echom 'type:' . a:split.type
+    for ns in a:split.namespaces
+        echom 'namespace: ' . ns
+    endfor
+    echom 'file:' . a:split.file
+    echom 'ext:' . a:split.ext
 endfunction
 
-
-"Open or create one of the .hxx files in the given dictionary
-function! OpenHxxFile(files)
-    if !filereadable(a:files.inc) && !filereadable(a:files.src)
-        let result = input("Following files do not exist:\ni: " . files.inc . "\ns: " . files.src . "\nCreate? (i/s/n): ")
-        if result ==? 'i' 
-            call OpenFile(a:files.inc)
-        elseif result ==? 's'
-            call OpenFile(a:files.src)
-        endif
-    elseif filereadable(a:files.src)
-        call OpenFile(a:files.src)
-    elseif filereadable(a:files.inc)
-        call OpenFile(a:files.inc)
-    endif
-
+"expand array of dir names to path
+function! JoinDir(dir_array)
+    let result = ""
+    for dir in a:dir_array
+        let result = result . '/' . dir
+    endfor
+    return result
 endfunction
 
-function! c#auro_source_files#OpenTestFile()
+function! c#auro_source_files#Test()
+    "let split = AuroSplit(expand('%'))
+    "echom 'Module: ' . split.module . ' * Type: '. split.type . ' * namespaces: ' . split.namespaces[0] .  ' * File: ' . split.file . ' * Ext: ' . split.ext
+    "let hpp_names = AuroHppNames(split)
+    "echom 'hpp_inc: ' . hpp_names.inc . ' * hpp_src: ' . hpp_names.src
+    "let test_name = AuroTestCppName(split)
+    "echom 'test_name: ' . test_name
+
     let split = AuroSplit(expand('%'))
+    call PrintSplit(split)
     let split.file = AuroRemove_tests(split.file)
-    "call PrintSplit(split)
-    let test_fn = AuroTestCppName(split)
-    call OpenCxxFile(test_fn)
+    call PrintSplit(split)
 endfunction
-
-function! c#auro_source_files#OpenCxxFile()
-    let split = AuroSplit(expand('%'))
-    let split.file = AuroRemove_tests(split.file)
-    "call PrintSplit(split)
-    let cpp_fn = AuroCppName(split)
-    call OpenCxxFile(cpp_fn)
-endfunction
-
-function! c#auro_source_files#OpenHxxFile()
-    let split = AuroSplit(expand('%'))
-    let split.file = AuroRemove_tests(split.file)
-    "call PrintSplit(split)
-    let hpp_fns = AuroHppNames(split)
-    call OpenHxxFile(hpp_fns)
-endfunction
-
