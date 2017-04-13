@@ -9,7 +9,7 @@ Vim plugin with utilities specific to my work environment.
 
 ## Usage  
 ### Jump to or create file  
-3 commands are defined, with 3 predefined shortcuts.  
+Commands and corresponding shortcuts are defined. 
 By default `<leader>` is `\`, see `:h mapleader`
 * `:AuroHxx` or  
   `<leader>1`  
@@ -22,10 +22,10 @@ By default `<leader>` is `\`, see `:h mapleader`
   open \_tests.cpp file from corresponding .h, .hpp, .c or .cpp file
 * `:AuroImplHpp` or  
   `<leader>4`  
-  open Impl.hpp file from corresponding .h, .hpp, .c or .cpp file
+  open Impl.hpp file from corresponding .c, .cpp or \_tests.cpp file
 * `:AuroImplCpp` or  
   `<leader>5`  
-  open Impl.cpp file from corresponding .h, .hpp, .c or .cpp file
+  open Impl.cpp file from corresponding .h, .hpp or \_tests.cpp file
 * `:AuroImplTest` or  
   `<leader>6`  
   open Impl\_tests.cpp file from corresponding .h, .hpp, .c or .cpp file
