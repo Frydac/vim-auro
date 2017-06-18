@@ -87,15 +87,13 @@ def parse_catch_test_cpp(file)
     result
 end
 
+# find current testcase, i.e. testcase on line before line_nr, or
+# return the first one if line_nr is before first testcase
 def find_test_case(file_info, line_nr)
-    last_tc = {}
+    last_tc = nil 
     file_info[:testcases].each do |tc|
-        # find current testcase, i.e. testcase on line before line_nr, or
-        # return the first one if line_nr is before first testcase
         last_tc = tc unless last_tc
-        if tc[:line_nr] > line_nr
-            break
-        end
+        break if tc[:line_nr] > line_nr
         last_tc = tc
     end
     last_tc

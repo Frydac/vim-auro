@@ -30,13 +30,13 @@ class TC_MyTest < Test::Unit::TestCase
   def test_find_test_case_before_first()
       file_info = parse_catch_test_cpp(@fn)
       testcase = find_test_case(file_info, 1)
-      pp testcase
+      pp 'before first', testcase
   end
 
   def test_find_test_case_after_first()
       file_info = parse_catch_test_cpp(@fn)
       testcase = find_test_case(file_info, 9)
-      pp testcase
+      pp 'should not be empty', testcase
   end
 
 end
