@@ -19,13 +19,13 @@ def parse_fn(filename)
     result[:ext] = File.extname(result[:fn])
     namespace = ""
     result[:namespaces] = []
-    stop_dir = ["src", "inc"]
+    stop_dirs = ["src", "inc"]
     loop do
         dir, namespace = File.split(dir)
-        break if stop_dir.include?namespace
+        break if stop_dirs.include? namespace
         result[:namespaces] << namespace
         if is_end_path(dir)
-            puts("Not a filename I can parse, it does not contain: #{stop_dir}, filename: #{filename}") if is_end_path(dir) #todo:test this on posix/win32
+            puts("Not a filename I can parse, it does not contain: #{stop_dirs}, filename: #{filename}") if is_end_path(dir) #todo:test this on posix/win32
             return {}
         end
     end
