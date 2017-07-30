@@ -1,5 +1,4 @@
 
-
 module Auro
     module Fn
 
@@ -73,15 +72,30 @@ module Auro
             # /home/emile/repos/auro-cx-v1/core-io/ruby/io/tree/parser.rb
             # /home/emile/repos/auro-cx-v1/core-io/test/ruby/io/tree/parser_tests.rb
             def initialize(filename)
+                @fn = filename
                 @parts = Fn::Parser::parse(filename, stop_dirs = ['ruby'])
             end
 
             def get_source_fn
-                File.join(@parts[:base_dir], @parts[:module], 'ruby', @parts[:namespaces], @parts[:fn])
+                return @fn if @parts[:test] == false
+                new_fn = Ruby::remove_tests_part(@parts[:fn])
+                File.join(@parts[:base_dir], @parts[:module], 'ruby', @parts[:namespaces], new_fn)
             end
 
             def get_test_fn
-                File.join(@parts[:base_dir], @parts[:module], 'test', 'ruby', @parts[:namespaces], @parts[:fn])
+                return @fn if @parts[:test] == true
+                File.join(@parts[:base_dir], @parts[:module], 'test', 'ruby', @parts[:namespaces],  "#{@parts[:fn_base]}_tests#{@parts[:ext]}")
+            end
+
+
+            def self.remove_tests_part(fn)
+                ext = File.extname(fn)
+                base = File.basename(fn, ext)
+                tests = '_tests'
+                if(base.end_with?(tests))
+                    return base[0..-(tests.length+1)] + ext
+                end
+                fn
             end
         end
 
@@ -99,6 +113,7 @@ module Auro
                 result = {}
                 dir, result[:fn] = File.split(filename)
                 result[:ext] = File.extname(result[:fn])
+                result[:fn_base] = File.basename(result[:fn], result[:ext])
                 result[:namespaces] = []
                 namespace = nil
                 loop do

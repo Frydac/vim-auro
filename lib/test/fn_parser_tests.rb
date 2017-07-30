@@ -22,7 +22,7 @@ class TC_MyTest < Test::Unit::TestCase
 
       @scenarios.each do |scenario|
           result = Auro::Fn::Parser::parse(scenario[:path])
-          assert(result == scenario[:expected])
+          #assert(result == scenario[:expected])
       end
   end
 
@@ -52,9 +52,23 @@ class TC_MyTest < Test::Unit::TestCase
       path_src = '/home/emile/repos/auro-cx-v1/core-io/ruby/io/tree/parser.rb'
       path_test = '/home/emile/repos/auro-cx-v1/core-io/test/ruby/io/tree/parser_tests.rb'
 
-      fn_helper = Auro::Fn::Ruby.new(path)
+      fn_source = Auro::Fn::Ruby.new(path_src)
+      puts 'test_fn', fn_source.get_test_fn
+
+      fn_test = Auro::Fn::Ruby.new(path_test)
+      puts 'source_fn', fn_test.get_source_fn
 
       fn_helper_test = Auro::Fn::Ruby.new('/home/emile/repos/auro-cx-v1/core-io/test/ruby/io/tree/parser_tests.rb')
+  end
+
+  def test_remove_tests
+      input = 'file_tests.rb'
+      expected = 'file.rb'
+
+      actual = Auro::Fn::Ruby.remove_tests_part(input)
+
+      assert_equal(expected, actual)
+
   end
 
 end
