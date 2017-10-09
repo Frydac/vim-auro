@@ -6,6 +6,22 @@ Vim plugin with utilities specific to my work environment.
 * With Vundle add to your .vimrc:  
 `Plugin 'Frydac/vim-auro'`  
 
+* A folder with **UltiSnips** snippits is included, to make them work you'll need the [UltiSnips plugin](https://github.com/SirVer/ultisnips), and add something like the following to your .vimrc:
+```
+    if has('win32')
+        let g:UltiSnipsSnippetsDir='~/vimfiles/bundle/vim-auro/UltiSnips'
+    else
+        let g:UltiSnipsSnippetsDir='~/.vim/bundle/vim-auro/UltiSnips'
+    endif
+```
+By default UltiSnips uses Tab to trigger it, but in my setup this is already taken. I use the following adjustments:
+```
+    let g:UltiSnipsExpandTrigger="<c-j>"
+    let g:UltiSnipsJumpForwardTrigger="<c-j>"
+    let g:UltiSnipsJumpBackwardTrigger="<c-h>"
+    " If you want :UltiSnipsEdit to split your window.
+    let g:UltiSnipsEditSplit="vertical"
+```
 
 ## Usage  
 ### Jump to or create file  

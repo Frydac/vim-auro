@@ -1,0 +1,347 @@
+global !p
+import os
+
+# todo make parse object that keeps its data, now it recalculates for each function
+
+# detect e.g. "D:\"
+def is_win_drive_letter(string):
+    return string[-2:] == ":\\"
+
+# create classname, extension without leading ., and an array of 
+# namespaces upto one of the stop_folders
+def split_source_fn(path, stop_folders = ['inc', 'src']):
+    #folder parts to stop searching for namespaces
+    rest_path, fn = os.path.split(path)
+    classname, extension = os.path.splitext(fn)
+    extension = extension[1:] # remove the leading dot (first char)
+    namespaces = []
+    # normally we should always encounter a stop_folder,
+    # but if we don't, we stop when the path can't be split anymore 
+    # TODO:test on posix system, could be it is a single "/"
+    while(rest_path and not is_win_drive_letter(rest_path)): 
+        rest_path, current = os.path.split(rest_path)
+        if(current in stop_folders):
+            break
+        namespaces.append(current)
+    namespaces.reverse()
+    rest_path, module = os.path.split(rest_path)
+    return classname, extension, namespaces, module
+
+def public_api_copyright_notice(path):
+    classname, extension, namespaces, module = split_source_fn(path)
+    file_name = module + '/' + '/'.join(namespaces) + '/' + classname + '.' + extension
+    notice=u"""//-------------------------------------------------------------------------
+// Name: {fn}
+//
+//  ®Copyright 2017 Auro Technologies. All Rights Reserved. Auro-3D® and 
+//  the related symbols are registered trademarks of Auro Technologies. 
+//  All materials and technology contained in this work are protected 
+//  by copyright law and may not be reproduced, distributed, transmitted, 
+//  displayed, published or broadcast, in whole or in part, without the 
+//  prior written permission of Auro Technologies NV or in the case of 
+//  third party materials, the owner of that content, file and/or method. 
+//  You may not alter or remove any trademark, copyright or other notice 
+//  from copies of the content, file and/or method. All other referenced 
+//  marks are those of their respective owners.
+//  
+//  Auro Technologies, phone +32-(0)-14314343, fax +32-(0)-14321224, 
+//  www.auro-technologies.com, info@auro-technologies.com.
+// 
+//-------------------------------------------------------------------------""".format(fn = file_name)
+    return notice
+
+
+def create_include_guard_name(path):
+    classname, extension, namespaces, _ = split_source_fn(path)
+    include_guard = "HEADER_"
+    for ns in namespaces:
+        include_guard += ns + "_"
+    include_guard += classname + "_" + extension
+    include_guard += "_ALREADY_INCLUDED"
+    return include_guard
+
+def create_ns_opening_line(path):
+    _, _, namespaces, _ = split_source_fn(path)
+    opening_line = ""
+    for ns in namespaces:
+        opening_line += "namespace " + ns + " { "
+    return opening_line.strip()
+    
+def create_ns_closing_line(path):
+    _, _, namespaces, _ = split_source_fn(path)
+    closing_line = ""
+    for ns in namespaces:
+        closing_line += "} "
+    return closing_line.strip()
+
+def get_classname(path):
+    classname, _, _, _ = split_source_fn(path)
+    return classname
+
+def is_public(path):
+    import os
+    public_path = os.sep + 'inc' + os.sep
+    return public_path in path
+
+def create_include_header(path):
+    classname, _, namespaces, _ = split_source_fn(path)
+    line = '#include "'
+    for ns in namespaces:
+            line += ns
+            line += '/'
+    if(classname.endswith("_tests")):
+            classname = classname[:-6]
+    line += classname + '.hpp"'
+    return line
+
+def create_using_ns(path):
+    _, _, namespaces, _ = split_source_fn(path)
+    lines = ["using namespace auro;"]
+    line = "using namespace "
+    for ns in namespaces:
+        line += ns
+        if (ns != namespaces[-1]):
+            line += '::'
+        else:
+            line += ';'
+    lines.append(line)
+    return lines
+
+def create_c_struct_name(path):
+	classname, _, namespaces, _ = split_source_fn(path)
+	struct_name = ''
+	for ns in namespaces:
+		struct_name += ns + '_'
+	struct_name += classname + '_'
+	return struct_name
+
+def abs_path():
+    return vim.eval('expand("%:p")')
+
+endglobal
+
+# on windows this would generate from inside:
+# M:\git\auro-hp\core-io\inc\auro\file\Name.hpp
+# the following:  
+# #ifndef HEADER_auro_file_Name_hpp_ALREADY_INCLUDED
+# #define HEADER_auro_file_Name_hpp_ALREADY_INCLUDED
+#
+# namespace auro { namespace file { 
+#    class Name
+#    {
+#    public:
+#	${1:leave_cursor_here}
+#    private:
+#    };
+# } }
+# #endif
+snippet init "create header template from the current buffer's Filename"
+`!p 
+include_guard = create_include_guard_name(abs_path())
+snip.rv = snip.mkline(line="#ifndef " + include_guard)
+snip += "#define " + include_guard
+if(is_public(abs_path())):
+    snip += public_api_copyright_notice(abs_path())
+snip += ""
+snip += create_ns_opening_line(abs_path())
+snip += ""
+snip.shift()
+snip += "class " + get_classname(abs_path())
+snip += "{"
+snip += "public:"
+# following is abit of a trick to get the insert position of the tabstop in the right indent, as far as I know we have to stop the python interpollation to insert a tabstop
+snip.shift()
+snip += ""`${1}
+`!p
+snip.shift()
+snip += "private:"
+snip += "};"
+snip.unshift()
+snip += ""
+snip += create_ns_closing_line(abs_path())
+snip += ""
+snip += "#endif"
+snip += ""
+`
+endsnippet
+
+snippet ig "include guard"
+`!p
+include_guard = create_include_guard_name(abs_path())
+snip.rv = snip.mkline(line="#ifndef " + include_guard)
+snip += "#define " + include_guard
+snip += ""
+if(is_public(abs_path())):
+    snip += public_api_copyright_notice(abs_path())
+snip += ""
+`
+${0:${VISUAL}}
+
+#endif
+endsnippet
+
+
+# TODO: make these work from everywhere and jump to the right place
+snippet in "#include"
+#include <$0>
+endsnippet
+
+snippet ina "#include auro"
+#include "${1:auro}$0"
+endsnippet
+
+snippet inap "#include auro/current/path/"
+`!p 
+_, _, namespaces, _ = split_source_fn(path)
+line = '#include "'
+for ns in namespaces:
+    line += ns
+    line += '/'
+snip.rv = snip.mkline(line=line)
+`$1"
+endsnippet
+
+# catch TEST stuff
+
+snippet T "catch TEST_CASE()"
+TEST_CASE("$1", "[$2]")
+{
+    $0
+}
+endsnippet
+
+snippet R "catch REQUIRE()"
+REQUIRE(${1:${VISUAL:expected == actual}});
+endsnippet
+
+snippet S "catch SECTION"
+SECTION("$1")
+{
+    ${0:${VISUAL}}
+}
+endsnippet
+
+snippet fm "function MSS"
+${1:bool} ${2:fun_name}($3)
+{
+    MSS_BEGIN($1);
+    $0
+    MSS_END();
+}
+endsnippet
+
+snippet MS "MSS_BEGIN() MSS_END() pair"
+MSS_BEGIN(${1:bool});
+${0:${VISUAL}}
+MSS_END();
+endsnippet
+
+snippet nsa "create auro namespaces"
+`!p
+snip.rv = snip.mkline(line=create_ns_opening_line(abs_path())) 
+snip.shift()
+snip += ""
+`$0
+`!p
+snip.rv = snip.mkline(line=create_ns_closing_line(abs_path())) 
+`
+endsnippet
+
+snippet inh "include auro header matching this .cpp or tests.cpp file"
+`!p
+snip.rv = snip.mkline(line=create_include_header(abs_path())) 
+`
+endsnippet
+
+snippet int "include catch.h and auro header matching this test.cpp file"
+`!p
+snip.rv = snip.mkline(line='#include "catch.hpp"') 
+snip += ""
+snip += create_include_header(abs_path())
+`
+endsnippet
+
+snippet usa "in cpp file, use the corresponding namespaces"
+`!p
+lines = create_using_ns(abs_path())
+snip.rv = snip.mkline(line=lines[0])
+snip += lines[1]
+`
+endsnippet
+
+snippet ui "unsigned int"
+unsigned int 
+endsnippet
+
+snippet idcpp "#if defined __cpp"
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+${0:${VISUAL}}
+
+#ifdef __cplusplus
+}
+#endif
+endsnippet
+
+snippet crn "copyright notice"
+`!p
+snip.rv = snip.mkline(line=public_api_copyright_notice(abs_path()))
+`
+endsnippet
+
+snippet cstr "c style struct"
+`!p snip.rv = snip.mkline('typedef struct ' + create_c_struct_name(abs_path()))`${1:Type}
+{
+    ${0:${VISUAL}}
+`!p snip.rv = snip.mkline('} ' + create_c_struct_name(abs_path()))`$1t;
+endsnippet
+
+snippet c "c namespace, e.g. auro_codec_metadata_v1_"
+`!p
+snip.rv = snip.mkline(create_c_struct_name(abs_path()))
+`
+endsnippet
+
+snippet initstruct "initialize c file with struct"
+`!p
+include_guard = create_include_guard_name(abs_path())
+snip.rv = snip.mkline(line="#ifndef " + include_guard)
+snip += "#define " + include_guard
+snip += ""
+if(is_public(abs_path())):
+    snip += public_api_copyright_notice(abs_path())
+snip += ""
+snip += "#ifdef __cplusplus"
+snip += 'extern "C" {'
+snip += '#endif'
+snip += ''
+snip.shift()
+snip += 'typedef struct ' + create_c_struct_name(abs_path())
+snip += '{'
+`
+        ${0:${VISUAL}}
+`!p
+snip.shift()
+snip.rv = snip.mkline('} ' + create_c_struct_name(abs_path()) + 't;')
+`
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
+endsnippet
+
+snippet cenum "c style enum with c style prefix"
+`!p snip.rv = snip.mkline('typedef enum ' + create_c_struct_name(abs_path()))`${1:Type}
+{
+    ${0:${VISUAL}}
+`!p snip.rv = snip.mkline('} ' + create_c_struct_name(abs_path()))`$1t;
+endsnippet
+
+snippet sca "static constexpr auto "
+static constexpr auto ${1:name}
+endsnippet
+

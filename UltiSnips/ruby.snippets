@@ -1,0 +1,26 @@
+snippet p "pp current word"
+pp "${VISUAL}", ${VISUAL}
+endsnippet
+
+snippet init "init story/qc script"
+$story = '$1'
+
+namespace :story do
+    task :test do
+	    $2
+	end
+end
+endsnippet
+
+snippet t "task"
+task :$1 do
+    $2
+end
+endsnippet
+
+snippet tc "task depending on cli"
+task :$1 => :cli do
+    $2
+end
+endsnippet
+	
