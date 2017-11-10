@@ -230,11 +230,17 @@ ${1:bool} ${2:fun_name}($3)
 }
 endsnippet
 
-snippet MS "MSS_BEGIN() MSS_END() pair"
+snippet "MS?S?" "MSS_BEGIN() MSS_END()" r
 MSS_BEGIN(${1:bool});
 ${0:${VISUAL}}
 MSS_END();
 endsnippet
+
+# snippet MS "MSS_BEGIN() MSS_END() pair"
+# MSS_BEGIN(${1:bool});
+# ${0:${VISUAL}}
+# MSS_END();
+# endsnippet
 
 snippet nsa "create auro namespaces"
 `!p
