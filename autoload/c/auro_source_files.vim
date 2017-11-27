@@ -45,8 +45,8 @@ endfunction
 function! c#auro_source_files#FindCurrentFileIncludes()
     let split = AuroSplit(expand('%:p'))
     let ns_part = JoinDir(split.namespaces)
-    let regex = "'include.+" . ns_part . '/' . split.file . '.' . split.ext . "'"
-    let cmd = 'Ack! ' . regex . ' --cpp'
+    let regex = "'include.+" . ns_part . '/' . split.file . '.' . split.ext . "\"'"
+    let cmd = 'Ack! ' . regex . ' --cpp --cc'
     execute 'cd ' . fnamemodify(split.module, ':h')
     execute cmd
     echom cmd
