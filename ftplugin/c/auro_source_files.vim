@@ -5,8 +5,6 @@ command! -buffer AuroImplHpp call c#auro_source_files#OpenImplHppFile()
 command! -buffer AuroImplCpp call c#auro_source_files#OpenImplCppFile()
 command! -buffer AuroImplTest call c#auro_source_files#OpenImplTestFile()
 command! -buffer AuroFindCurrentFileIncludes call c#auro_source_files#FindCurrentFileIncludes()
-command! -buffer AuroChangeDirToSuperModule call c#auro_source_files#FindChangeDirToSuperModule()
-command! -buffer AuroChangeDirToModule call c#auro_source_files#FindChangeDirToModule()
 
 nnoremap <buffer> <silent> <leader>1 :AuroHxx<cr>
 nnoremap <buffer> <silent> <leader>2 :AuroCxx<cr>
@@ -15,8 +13,6 @@ nnoremap <buffer> <silent> <leader>4 :AuroImplHpp<cr>
 nnoremap <buffer> <silent> <leader>5 :AuroImplCpp<cr>
 nnoremap <buffer> <silent> <leader>6 :AuroImplTest<cr>
 nnoremap <buffer> <silent> <leader>af :AuroFindCurrentFileIncludes<cr>
-nnoremap <buffer> <silent> <leader>as :AuroChangeDirToSuperModule<cr>
-nnoremap <buffer> <silent> <leader>am :AuroChangeDirToModule<cr>
 
 "use for test
 " nnoremap <buffer> <leader>4 :call c#auro_source_files#Test()<cr>

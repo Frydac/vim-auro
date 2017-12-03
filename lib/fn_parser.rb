@@ -2,6 +2,38 @@
 module Auro
     module Fn
 
+        module Supermodule
+            # get left most parent directory that contains .git
+            def self.get_folder(filename)
+                raise("should be an existing file") unless File.exists?(filename)
+                split_path = filename.split(File::SEPARATOR)
+                cur_path = ""
+                split_path.each do |part|
+                    cur_path = File::SEPARATOR if cur_path.empty? and part.empty?
+                    cur_path = File.join(cur_path, part)
+                    if (File.directory?(cur_path))
+                        git_folder = File.join(cur_path, '.git')
+                        return cur_path if File.exists?(git_folder)
+                    end
+                end
+                raise("no .git folder found in any of the parent directories of: #{filename}")
+            end
+        end
+
+        module Module
+            # get right most parent directory that contains .git
+            def self.get_folder(filename)
+                raise("should be an existing file") unless File.exists?(filename)
+                cur_path = filename
+                begin
+                    cur_path, _ = File.split(cur_path)
+                    git_folder = File.join(cur_path, '.git')
+                    return cur_path if File.exist?(git_folder)
+                end while (not cur_path.empty?)
+                raise("no .git folder found in any of the parent directories of: #{filename}")
+            end
+        end
+
         class Cpp
             def initialize(filename)
                 @parts = Fn::Parser::parse(filename)

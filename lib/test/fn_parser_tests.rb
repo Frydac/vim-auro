@@ -68,7 +68,17 @@ class TC_MyTest < Test::Unit::TestCase
       actual = Auro::Fn::Ruby.remove_tests_part(input)
 
       assert_equal(expected, actual)
+  end
 
+  def test_supermodule_get_folder
+      # this needs to be a real folder
+      path_abs = '/home/emile/repos/auro-cx-v2/core-build/docs/index.md'
+      path_relative = 'auro-cx-v2/core-build/docs/index.md'
+      path_win = 'C:/git/test'
+
+      puts "█ path_abs:"; pp path_abs
+      puts Auro::Fn::Supermodule::get_folder(path_abs)
+      puts Auro::Fn::Module::get_folder(path_abs)
   end
 
 end
