@@ -210,11 +210,11 @@ TEST_CASE("$1", "[$2]")
 }
 endsnippet
 
-snippet R "catch REQUIRE()"
+snippet R "catch REQUIRE(){..}"
 REQUIRE(${1:${VISUAL:expected == actual}});
 endsnippet
 
-snippet S "catch SECTION"
+snippet S "catch SECTION(){..}"
 SECTION("$1")
 {
     ${0:${VISUAL}}
@@ -230,17 +230,19 @@ ${1:bool} ${2:fun_name}($3)
 }
 endsnippet
 
-snippet "MS?S?" "MSS_BEGIN() MSS_END()" r
-MSS_BEGIN(${1:bool});
+snippet "MS?S?R" "MSS_BEGIN_RC() MSS_CLEANUP()MSS_END()" r
+MSS_BEGIN_RC();
 ${0:${VISUAL}}
+MSS_CLEANUP();
 MSS_END();
 endsnippet
 
-# snippet MS "MSS_BEGIN() MSS_END() pair"
-# MSS_BEGIN(${1:bool});
-# ${0:${VISUAL}}
-# MSS_END();
-# endsnippet
+snippet "MS?S?B" "MSS_BEGIN_B() MSS_CLEANUP()MSS_END()" r
+MSS_BEGIN_B();
+${0:${VISUAL}}
+MSS_CLEANUP();
+MSS_END();
+endsnippet
 
 snippet nsa "create auro namespaces"
 `!p
@@ -275,8 +277,12 @@ snip += lines[1]
 `
 endsnippet
 
-snippet ui "unsigned int"
+snippet ui "unsigned int" w
 unsigned int 
+endsnippet
+
+snippet cui "const unsigned int" w
+const unsigned int 
 endsnippet
 
 snippet idcpp "#if defined __cpp"
