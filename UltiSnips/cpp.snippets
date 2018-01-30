@@ -1,7 +1,22 @@
-snippet fora "for auto i=0u"
-for (auto i=0u; i<${1:size}; ++i)
+
+snippet forr "ranged for"
+for (const auto &${1:value} : ${2:collection})
 {
-	${2}
+	${0:${VISUAL}}
 }
+endsnippet
+
+snippet "MS?S?" "MSS_BEGIN() MSS_END()" r
+MSS_BEGIN(${1:bool});
+${0:${VISUAL}}
+MSS_END();
+endsnippet
+
+snippet ca "const auto " w
+const auto 
+endsnippet
+
+snippet un "using namespace" w
+using namespace
 endsnippet
 
