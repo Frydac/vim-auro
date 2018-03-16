@@ -180,6 +180,14 @@ ${0:${VISUAL}}
 #endif
 endsnippet
 
+snippet igo "open include guard"
+`!p
+include_guard = create_include_guard_name(abs_path())
+snip.rv = snip.mkline(line="#ifndef " + include_guard)
+snip += "#define " + include_guard
+`
+endsnippet
+
 
 # TODO: make these work from everywhere and jump to the right place
 snippet in "#include"
