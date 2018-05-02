@@ -1,6 +1,7 @@
 from enum import Enum
 from pathlib import PurePath, Path
 from pprint import pprint
+import re
 
 
 # TODO: move these, now prototype
@@ -25,6 +26,21 @@ def possible_headers(path):
             result.append(header_path)
     return result
 
+# TODO: make class to hold include data
+def find_includes(path):
+    if path.filetype not in [Ft.c, Ft.cpp]:
+        return
+    include_re = re.compile(r'#include\s+["<](.+)[">]')
+    includes = {}
+    with open(path.fn) as f:
+        for ix, line in enumerate(f):
+            md = include_re.match(line)
+            if md:
+                includes[ix] = [line, md.group(1)]
+
+    return includes
+            
+
 def nstr(s):
     return 'None' if s is None else str(s)
 
@@ -48,9 +64,9 @@ class AuroPath():
     __do_log = False
 
     def __init__(self, path_str):
-        self.path = Path(path_str)
+        self.fn = Path(path_str)
         if self.__do_log:
-            pprint(self.path)
+            pprint(self.fn)
         self.module = None
         self.module_dir = None
         self.supermodule = None
@@ -59,13 +75,13 @@ class AuroPath():
         self.filetype = None
         self.classname = None
         self.namespaces = []
-        self.__analyze_path(self.path)
+        self.__analyze_path(self.fn)
 
     Type = Enum('PathType', 'inc src test qc story script ruby lib python')
 
     def __str__(self):
         result = ''
-        result += 'path            : ' + str(self.path) + '\n'
+        result += 'path            : ' + str(self.fn) + '\n'
         result += 'module          : ' + nstr(self.module) +  '\n'
         result += 'module_dir      : ' + nstr(self.module_dir) +  '\n'
         result += 'supermodule     : ' + nstr(self.supermodule) +  '\n'

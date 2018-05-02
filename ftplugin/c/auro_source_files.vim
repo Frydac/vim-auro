@@ -20,3 +20,10 @@ nnoremap <buffer> <silent> <leader>af :AuroFindCurrentFileIncludes<cr>
 nnoremap <buffer> <leader>7 :silent! call c#auro_source_files#Reload()<cr>
 
 
+python3 << endpython
+sys.path.insert(0, os.path.join(vim.eval("g:auro_plugin_dir"), 'lib'))
+from testing import hello 
+from myvim.auro_source_files import goto_includes
+endpython
+
+nnoremap <leader>ain :py3 goto_includes()<cr>
