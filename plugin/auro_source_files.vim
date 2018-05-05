@@ -16,7 +16,7 @@ import os
 
 sys.path.insert(0, os.path.join(vim.eval("g:auro_plugin_dir"), 'lib'))
 from testing import hello 
-from myvim.auro_source_files import c_headers
+from myvim.auro_source_files import c_headers, goto_includes
 
 def test():
     hello()
@@ -26,7 +26,8 @@ def test():
     # print(vim.eval("g:auro_plugin_dir"))
     # print("buffer name")
     # print(vim.current.buffer.name)
-    c_headers(vim.current.buffer.name)
+    # c_headers(vim.current.buffer.name)
+    goto_includes(vim.current.buffer.name)
 
 endpython
 
