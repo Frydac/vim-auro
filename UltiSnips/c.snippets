@@ -190,24 +190,24 @@ endsnippet
 
 
 # TODO: make these work from everywhere and jump to the right place
-snippet in "#include"
-#include <$0>
-endsnippet
+# snippet in "#include"
+# #include <$0>
+# endsnippet
 
-snippet ina "#include auro"
-#include "${1:auro}$0"
-endsnippet
+# snippet ina "#include auro"
+# #include "${1:auro}$0"
+# endsnippet
 
-snippet inap "#include auro/current/path/"
-`!p 
-_, _, namespaces, _ = split_source_fn(path)
-line = '#include "'
-for ns in namespaces:
-    line += ns
-    line += '/'
-snip.rv = snip.mkline(line=line)
-`$1"
-endsnippet
+# snippet inap "#include auro/current/path/"
+# `!p 
+# _, _, namespaces, _ = split_source_fn(path)
+# line = '#include "'
+# for ns in namespaces:
+#     line += ns
+#     line += '/'
+# snip.rv = snip.mkline(line=line)
+# `$1"
+# endsnippet
 
 # catch TEST stuff
 

@@ -1,4 +1,3 @@
-
 command! AuroChangeDirToSuperModule call auro_source_files#FindChanceDirToSuperModule()
 command! AuroChangeDirToModule call auro_source_files#FindChangeDirToModule()
 
@@ -27,9 +26,10 @@ def test():
     # print("buffer name")
     # print(vim.current.buffer.name)
     # c_headers(vim.current.buffer.name)
-    goto_includes(vim.current.buffer.name)
+    # goto_includes(vim.current.buffer.name)
 
 endpython
 
 
 nnoremap <leader>te :py3 test()<cr>
+nnoremap <leader>ain :py3 goto_includes()<cr>
