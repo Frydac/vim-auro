@@ -378,3 +378,67 @@ for (unsigned int ${1:i} = 0u; i < ${2:count}; ++$1)
 	${0:${VISUAL}}
 }
 endsnippet
+
+global !p
+import vim
+import sys
+import os
+
+sys.path.insert(0, os.path.join(vim.eval("g:auro_plugin_dir"), 'lib'))
+from testing import hello 
+from myvim.auro_source_files import c_headers, goto_includes
+from auro_path import AuroPath, possible_headers, find_includes
+
+# TODO when no includes, only includes starting at 0?, search for include guard if header.
+
+def expand_include(snip):
+	snippet_body = '#include <${0:vector}>'
+	snip.expand_anon(snippet_body)
+
+def expand_include_auro(snip):
+	snippet_body = '#include "${1:auro/}$0"'
+	snip.expand_anon(snippet_body)
+
+def expand_include_auro_path(snip):
+	path = AuroPath(vim.current.buffer.name)
+	namespace = ''
+	for ns in path.namespaces:
+		namespace += ns + '/'
+	snippet_body = '#include "%s"$0' % namespace
+	snip.expand_anon(snippet_body)
+	
+
+def add_current_cursor_pos_to_jumplist():
+	vim.command(":normal m'")
+
+def del_current_line(snip):
+	del(snip.buffer[snip.line])
+
+
+def del_line_and_move_cursor_to_includes(snip):
+	includes = find_includes(AuroPath(vim.current.buffer.name))
+	if not includes:
+		print("vim-auro snippet warning: No includes found inserting on current line")		
+		return
+	del_current_line(snip)
+	last_include_lineix = max(includes.keys())
+	add_current_cursor_pos_to_jumplist()
+	snip.buffer.append('', last_include_lineix + 1)
+	snip.cursor.set(last_include_lineix + 1, 0)
+
+endglobal
+
+pre_expand "del_line_and_move_cursor_to_includes(snip)"
+post_jump "expand_include(snip)"
+snippet in "jump to includes and add #include<>"
+endsnippet
+
+pre_expand "del_line_and_move_cursor_to_includes(snip)"
+post_jump "expand_include_auro(snip)"
+snippet ina "jump to includes and add #include<>"
+endsnippet
+
+pre_expand "del_line_and_move_cursor_to_includes(snip)"
+post_jump "expand_include_auro_path(snip)"
+snippet inap "jump to includes and add #include<>"
+endsnippet
