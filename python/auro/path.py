@@ -26,43 +26,6 @@ def possible_headers(path):
             result.append(header_path)
     return result
 
-# TODO: make class to hold include data, don't read from file but from buffer (might not have been saved)
-from typing import NamedTuple
-
-class Include(NamedTuple):
-    name: str
-    line_nr: int
-    line: str
-
-class Includes():
-    def __init__(self, vim_buff):
-        self.auro_includes = []
-        self.std_includes = []
-        self.other_includes = []
-        self._parse_includes(vim_buff)
-
-    def __str__(self):
-        result = ''
-        result += str(self.auro_includes)
-        return result
-
-    _auro_inc_re = re.compile(r'#include\s+"(auro.+)"')
-    _std_inc_re = re.compile(r'#include\s+<(.+)>')
-    _other_inc_re = re.compile(r'#include\s+"(.+)"')
-    def _parse_includes(self, vim_buff):
-        regexs = {self._auro_inc_re: self.auro_includes,
-                self._std_inc_re: self.std_includes,
-                self._other_inc_re: self.other_includes}
-        for ix, line in enumerate(vim_buff):
-            for regex, containter in regexs.items():
-                md = regex.match(line)
-                if md:
-                    containter += Include(
-                            name = md.group(1),
-                            line_nr = ix,
-                            line = line)
-                    continue #we don't want to match more than once, order of regexs is important
-
 def find_includes(path):
     if path.filetype not in [Ft.c, Ft.cpp]:
         return

@@ -1,5 +1,6 @@
 import unittest
 import os, sys
+from pprint import pprint
 #  sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 #  from auro_path import AuroPath, possible_headers
 from enum import Enum
@@ -26,19 +27,6 @@ class Types(Enum):
 #          print(path)
 #          print("█ possible_headers(path):")
 #          pprint(possible_headers(path))
-
-
-from auro.path import Includes
-
-class TestAuroPath(unittest.TestCase):
-    
-    def test_test(self):
-        buff = ['#include <iostream>',
-                '#include "auro/bla/file.cpp"']
-        includes = Includes(buff)
-        print(includes)
-        self.assertEqual(1, 2)
-
 
 if __name__ == '__main__':
     unittest.main()
