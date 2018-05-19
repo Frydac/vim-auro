@@ -1,5 +1,4 @@
 import unittest
-import os, sys
 from pprint import pprint
 
 from auro.c.includes import *

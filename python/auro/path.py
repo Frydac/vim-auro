@@ -1,46 +1,8 @@
 from enum import Enum
 from pathlib import PurePath, Path
 from pprint import pprint
+from typing import List, Optional
 import re
-
-
-# TODO: move these, now prototype
-
-def possible_headers(path):
-    if path.filetype not in [Ft.c, Ft.cpp]:
-        return
-    if not path.module:
-        print("path doesn't have a module:")
-        print(path)
-        return
-    possible_path_types = ['inc', 'src']
-    possible_header_exts = {Ft.c: ['.h'], Ft.cpp: ['.h', '.hpp']}
-    result = []
-    for type in possible_path_types:
-        for h_ext in possible_header_exts[path.filetype]:
-            header_path = Path(path.module)
-            header_path /= type
-            for ns in path.namespaces:
-                header_path /= ns
-            header_path /= path.classname + h_ext
-            result.append(header_path)
-    return result
-
-def find_includes(path):
-    if path.filetype not in [Ft.c, Ft.cpp]:
-        return
-    include_re = re.compile(r'#include\s+["<](.+)[">]')
-    includes = {}
-    with open(path.fn) as f:
-        for ix, line in enumerate(f):
-            md = include_re.match(line)
-            if md:
-                includes[ix] = [line, md.group(1)]
-
-    return includes
-            
-def nstr(s):
-    return 'None' if s is None else str(s)
 
 Ft = Enum('FileType', 'cpp c ruby markdown python')
 FtMap = {
@@ -50,7 +12,7 @@ FtMap = {
         '.py': Ft.python,
         '.md': Ft.markdown
         }
-    
+
 class AuroPath():
     """
     Extract metadata from paths organized the 'auro' way
@@ -78,8 +40,10 @@ class AuroPath():
     Type = Enum('PathType', 'inc src test qc story script ruby lib python')
 
     def __str__(self):
+        def nstr(s):
+            return 'None' if s is None else str(s)
         result = ''
-        result += 'path            : ' + str(self.fn) + '\n'
+        result += 'fn              : ' + str(self.fn) + '\n'
         result += 'module          : ' + nstr(self.module) +  '\n'
         result += 'module_dir      : ' + nstr(self.module_dir) +  '\n'
         result += 'supermodule     : ' + nstr(self.supermodule) +  '\n'
@@ -88,9 +52,11 @@ class AuroPath():
         result += 'filetype        : ' + nstr(self.filetype) + '\n'
         result += 'classname       : ' + self.classname + '\n'
         result += 'namespaces      : ' + str(self.namespaces) + '\n'
+        result += 'ext             : ' + str(self.ext) + '\n'
         return result
 
     def __analyze_path(self, path):
+        self.ext = path.suffix
         self.__parse_filetype(path)
         self.__parse_classname(path)
         cur_path = Path('')
@@ -140,3 +106,18 @@ class AuroPath():
 def is_git_dir(path):
     git_dir = Path(path) / '.git'
     return git_dir.exists()
+
+def filetype(path: str) -> Optional[Ft]:
+    ext = PurePath(path).suffix 
+    if ext in FtMap:
+        return FtMap[ext]
+    return None
+
+def include_path(path: AuroPath):
+    result = ''
+    if(path.namespaces):
+        result = '/'.join(path.namespaces)
+    result += '/' + path.classname
+    result += path.ext
+    return result
+    

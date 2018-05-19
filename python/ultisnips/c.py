@@ -39,3 +39,4 @@ def del_line_and_move_cursor_to_includes(snip):
 	add_current_cursor_pos_to_jumplist()
 	snip.buffer.append('', last_include_lineix + 1)
 	snip.cursor.set(last_include_lineix + 1, 0)
+

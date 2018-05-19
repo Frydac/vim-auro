@@ -1,0 +1,14 @@
+global !p
+import vim
+import sys
+import os
+
+sys.path.insert(0, os.path.join(vim.eval("g:auro_plugin_dir"), 'python'))
+from ultisnips.cpp import expand_test_case
+
+endglobal
+
+post_jump "expand_test_case(snip)"
+snippet T "TEST_CASE"
+endsnippet
+

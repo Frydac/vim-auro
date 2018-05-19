@@ -20,10 +20,6 @@ _std_inc_re = re.compile(r'#include\s+<(.+)>')
 _other_inc_re = re.compile(r'#include\s+"(.+)"')
 _regexs = {Type.Auro: _auro_inc_re, Type.Std: _std_inc_re, Type.Other: _other_inc_re }
 def find_includes(lines: Lines) -> Includes:
-    """
-    Find includes in Lines
-    @return a hash with key Type, value is array of Include tupples of that Type
-    """
     result = {} # type: Includes
     for inc_type in Type:
         result[inc_type] = []
