@@ -1,7 +1,7 @@
 import unittest
 import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from auro_path import AuroPath, possible_headers
+from auro_path import AuroPath, possible_related_header_fns
 from enum import Enum
 from pprint import pprint
 
@@ -24,8 +24,8 @@ class TestAuroPath(unittest.TestCase):
         print(path)
         path = AuroPath('/home/emile/repos/fusion-avs/comp-avs/src/auro/avs/v1/metadata/functions.cpp')
         print(path)
-        print("█ possible_headers(path):")
-        pprint(possible_headers(path))
+        print("█ possible_related_header_fns(path):")
+        pprint(possible_related_header_fns(path))
 
 
 

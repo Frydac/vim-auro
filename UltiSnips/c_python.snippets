@@ -1,9 +1,9 @@
 global !p
-import vim
-import sys
-import os
-
+import vim, sys, os
 sys.path.insert(0, os.path.join(vim.eval("g:auro_plugin_dir"), 'python'))
 from ultisnips.c import *
-
 endglobal
+
+post_jump "expand_init(snip)"
+snippet init "init c/cpp file"
+endsnippet
