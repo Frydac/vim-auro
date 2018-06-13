@@ -135,35 +135,35 @@ endglobal
 #    };
 # } }
 # #endif
-snippet init "create header template from the current buffer's Filename"
-`!p 
-include_guard = create_include_guard_name(abs_path())
-snip.rv = snip.mkline(line="#ifndef " + include_guard)
-snip += "#define " + include_guard
-if(is_public(abs_path())):
-    snip += public_api_copyright_notice(abs_path())
-snip += ""
-snip += create_ns_opening_line(abs_path())
-snip += ""
-snip.shift()
-snip += "class " + get_classname(abs_path())
-snip += "{"
-snip += "public:"
-# following is abit of a trick to get the insert position of the tabstop in the right indent, as far as I know we have to stop the python interpollation to insert a tabstop
-snip.shift()
-snip += ""`${1}
-`!p
-snip.shift()
-snip += "private:"
-snip += "};"
-snip.unshift()
-snip += ""
-snip += create_ns_closing_line(abs_path())
-snip += ""
-snip += "#endif"
-snip += ""
-`
-endsnippet
+# snippet init "create header template from the current buffer's Filename"
+# `!p 
+# include_guard = create_include_guard_name(abs_path())
+# snip.rv = snip.mkline(line="#ifndef " + include_guard)
+# snip += "#define " + include_guard
+# if(is_public(abs_path())):
+#     snip += public_api_copyright_notice(abs_path())
+# snip += ""
+# snip += create_ns_opening_line(abs_path())
+# snip += ""
+# snip.shift()
+# snip += "class " + get_classname(abs_path())
+# snip += "{"
+# snip += "public:"
+# # following is abit of a trick to get the insert position of the tabstop in the right indent, as far as I know we have to stop the python interpollation to insert a tabstop
+# snip.shift()
+# snip += ""`${1}
+# `!p
+# snip.shift()
+# snip += "private:"
+# snip += "};"
+# snip.unshift()
+# snip += ""
+# snip += create_ns_closing_line(abs_path())
+# snip += ""
+# snip += "#endif"
+# snip += ""
+# `
+# endsnippet
 
 snippet ig "include guard"
 `!p

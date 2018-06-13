@@ -130,9 +130,6 @@ def _init_c_source_snip(path: AuroPath):
     "includes all existing possible c headers"
     snip_body = ''
     snip_body += c_related_header_include_snip(path) + "\n"
-    snip_body += Namespaces.open(path) + '\n'
-    snip_body += Namespaces.close() + '\n'
-
     return snip_body
 
 def _init_cpp_source_snip(path: AuroPath):
