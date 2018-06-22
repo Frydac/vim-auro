@@ -49,6 +49,7 @@ def split_source_fn(path, stop_folders = ['inc', 'src']):
     namespaces.reverse()
     return classname, extension, namespaces
 
+import re
 def create_include_guard_name(path):
     classname, extension, namespaces = split_source_fn(path)
     include_guard = "HEADER_"
@@ -56,7 +57,7 @@ def create_include_guard_name(path):
         include_guard += ns + "_"
     include_guard += classname + "_" + extension
     include_guard += "_ALREADY_INCLUDED"
-    return include_guard
+    return re.sub(r"[-.]", "_", include_guard)
 
 def create_ns_opening_line(path):
     _, _, namespaces = split_source_fn(path)

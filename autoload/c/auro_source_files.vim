@@ -42,7 +42,7 @@ function! c#auro_source_files#FindCurrentFileIncludes()
     " let regex = "'include.+" . ns_part . '/' . split.file . '.' . split.ext . "\"'"
     let regex = "\"include.+" . split.file . '.' . split.ext . "\""
     echom 'regex: ' . regex
-    let cmd = 'Ack! ' . regex . ' --cpp --cc -u'
+    let cmd = 'Rg ' . regex . ' -tcpp -tc'
     echom 'search cmd: ' . cmd
     " execute 'cd ' . fnamemodify(split.module, ':h')
     execute cmd
