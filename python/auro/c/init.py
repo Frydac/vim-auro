@@ -46,7 +46,7 @@ class Namespaces:
 
     @staticmethod
     def open(path: AuroPath):
-        ns_snips = ["namespace %s{" % ns for ns in path.namespaces]
+        ns_snips = ["namespace %s {" % ns for ns in path.namespaces]
         result = ' '.join(ns_snips)
         Namespaces.nr_opened = len(path.namespaces)
         return result
@@ -86,10 +86,10 @@ def c_struct_snip(path: AuroPath):
     snip_body = 'typedef struct ' + c_struct_name + '${1:Type}\n'
     snip_body += '{\n'
     snip_body += '    $0\n'
-    snip_body += '} ' + c_struct_name + '$1t'
+    snip_body += '} ' + c_struct_name + '$1t;'
     return snip_body
 
-def shift(level, text):
+def shift(level: int, text: str):
     shifted_text = ''
     # TODO: get correct shift width from vim/ultisnips
     tab = '    '
@@ -136,9 +136,14 @@ def _init_cpp_source_snip(path: AuroPath):
     "includes all existing possible headers, c an cpp"
     snip_body = ''
     snip_body += c_related_header_include_snip(path) + "\n"
-    snip_body += Namespaces.open(path) + '\n\n'
-    snip_body += '    $0\n\n'
-    snip_body += Namespaces.close() + '\n'
+    ns_open = Namespaces.open(path)
+    level = 0
+    if ns_open:
+        snip_body += Namespaces.open(path) + '\n\n'
+        level = 1
+    snip_body += '    ' * level + '$0\n\n'
+    if ns_open:
+        snip_body += Namespaces.close() + '\n'
 
     return snip_body
 
@@ -148,7 +153,7 @@ def _init_cpp_header_snip(path: AuroPath):
     if AuroPath.Type.inc in path.types:
         snip_body += copyright_notice(path) + '\n\n'
     snip_body += Namespaces.open(path) + '\n\n'
-    snip_body += shift(1, class_snip(path)) + '\n\n'
+    snip_body += shift(1, class_snip(path)) + '\n'
     snip_body += Namespaces.close() + '\n\n'
     snip_body += IncludeGuard.close() + '\n'
     return snip_body
