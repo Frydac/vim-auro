@@ -37,7 +37,7 @@ class AuroPath():
         self.namespaces = []
         self.__analyze_path(self.fn)
 
-    Type = Enum('PathType', 'inc src test qc story script ruby lib python')
+    Type = Enum('PathType', 'inc src test qc story script ruby lib python public private protected')
 
     def __str__(self):
         def nstr(s):
