@@ -36,6 +36,24 @@ related_test_info = {
         'dir_types':      dir_types
         }
 
+def related_filenames(path, info):
+    basename_types = [BasenameType(key, value) for key, value in info['basename_types'].items()]
+    basename = Basename(basename_types , path)
+    dir_types = [Dirtype(key, value) for key, value in info['dir_types'].items()]
+    dirname = Dirname(dir_types, path)
+
+    if not is_valid_from_bt_dt(basename, dirname, info):
+        return None
+    
+    to_basename_types = [bn_type for bn_type in basename_types if bn_type.type in info['to_bt']]
+    to_basenames = [create_basename(basename, to_bt) for to_bt in to_basename_types]
+    
+    to_dirtypes = [dir_type for dir_type in dir_types if dir_type.type in info['to_dt']]
+    to_dirnames = [create_dirname(dirname, to_dt) for to_dt in to_dirtypes]
+
+    related_filenames = [str(PurePath(dirname) / PurePath(basename)) for dirname, basename in list(product(to_dirnames, to_basenames))]
+    return related_filenames
+
 class BasenameType():
     def __init__(self, bn_type, bn_type_str):
         assert isinstance(bn_type, Enum)
@@ -199,27 +217,5 @@ def create_basename(basename, basename_type):
     result += basename.name
     result += basename_type.suffix
     return result
-
-def related_filenames(path, info):
-    basename_types = [BasenameType(key, value) for key, value in info['basename_types'].items()]
-    basename = Basename(basename_types , path)
-    dir_types = [Dirtype(key, value) for key, value in info['dir_types'].items()]
-    dirname = Dirname(dir_types, path)
-
-    if not is_valid_from_bt_dt(basename, dirname, info):
-        return None
-    
-    to_basename_types = [bn_type for bn_type in basename_types if bn_type.type in info['to_bt']]
-    to_basenames = [create_basename(basename, to_bt) for to_bt in to_basename_types]
-    print("█ to_basenames:")
-    pprint(to_basenames)
-    
-    to_dirtypes = [dir_type for dir_type in dir_types if dir_type.type in info['to_dt']]
-    to_dirnames = [create_dirname(dirname, to_dt) for to_dt in to_dirtypes]
-    print("█ to_dirnames:")
-    pprint(to_dirnames)
-
-    related_filenames = [str(PurePath(dirname) / PurePath(basename)) for dirname, basename in list(product(to_dirnames, to_basenames))]
-    return related_filenames
 
 
