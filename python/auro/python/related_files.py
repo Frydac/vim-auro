@@ -149,10 +149,9 @@ class Dirname():
         self.types = [] 
         self.base_dir = ''
         self.namespace = ''
+        # dir_part = the part between base_dir and namespace
         self.dir_part = ''
         self.__dir_types = dir_types
-        # __name = the part between base_dir and namespace
-        self.__name = ''
         if path:
             self.process(path)
 
