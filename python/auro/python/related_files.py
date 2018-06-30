@@ -63,16 +63,16 @@ class BasenameType():
         return str(self)
 
 class BasenameMatch():
-    def __init__(self, bn_type, bn_type_str):
+    def __init__(self, bn_type, basename):
         assert isinstance(bn_type, BasenameType)
         self.type = bn_type
-        self.type_str = bn_type_str
-        self.name = self.__parse_name(self.type, self.type_str)
+        self.basename = basename
+        self.name = self.__parse_name(self.type, self.basename)
 
     @staticmethod
-    def __parse_name(type, type_str):
+    def __parse_name(type, basename):
         name_re = re.escape(type.prefix) + '(?P<name>.*)' + re.escape(type.suffix)
-        name_match = re.match(name_re, type_str)
+        name_match = re.match(name_re, basename)
         if name_match:
             return name_match.group('name')
 
