@@ -38,18 +38,18 @@ related_test_info = {
 
 def related_filenames(path, info):
     basename_types = [BasenameType(key, value) for key, value in info['basename_types'].items()]
-    basename = Basename(basename_types , path)
     dir_types = [Dirtype(key, value) for key, value in info['dir_types'].items()]
-    dirname = Dirname(dir_types, path)
 
-    if not is_valid_from_bt_dt(basename, dirname, info):
+    from_basename = Basename(basename_types , path)
+    from_dirname = Dirname(dir_types, path)
+    if not is_valid_from_bt_dt(from_basename, from_dirname, info):
         return None
     
     to_basename_types = [bn_type for bn_type in basename_types if bn_type.type in info['to_bt']]
-    to_basenames = [create_basename(basename, to_bt) for to_bt in to_basename_types]
+    to_basenames = [create_basename(from_basename, to_bt) for to_bt in to_basename_types]
     
     to_dirtypes = [dir_type for dir_type in dir_types if dir_type.type in info['to_dt']]
-    to_dirnames = [create_dirname(dirname, to_dt) for to_dt in to_dirtypes]
+    to_dirnames = [create_dirname(from_dirname, to_dt) for to_dt in to_dirtypes]
 
     related_filenames = [str(PurePath(dirname) / PurePath(basename)) for dirname, basename in list(product(to_dirnames, to_basenames))]
     return related_filenames
