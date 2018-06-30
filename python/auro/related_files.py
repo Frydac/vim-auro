@@ -17,9 +17,9 @@ Dt = Enum('DirType', 'private protected public test')
 
 # a path can have more than one matching DirType
 dirtypes = {
-        Dt.public:    re.compile('\/public\/')
-        Dt.protected: re.compile('\/protected\/')
-        Dt.private:   re.compile('\/private\/')
+        Dt.public:    re.compile('\/public\/'),
+        Dt.protected: re.compile('\/protected\/'),
+        Dt.private:   re.compile('\/private\/'),
         Dt.test:      re.compile('\/test\/(protected|public|private)/')
         }
 
