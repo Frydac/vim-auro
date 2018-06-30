@@ -1,9 +1,6 @@
-import unittest
-from pprint import pprint
-from enum import Enum
-from auro.path import AuroPath, include_path
 from auro.python.related_files import related_filenames, related_test_info, related_source_info
 from pprint import pprint
+import unittest
 
 class TestRelatedFilenames(unittest.TestCase):
     
