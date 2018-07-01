@@ -36,6 +36,11 @@ related_test_info = {
         'dir_types':      dir_types
         }
 
+ #  = {
+ #         'bt': [ {'from': Bt.test, 'to': Bt.source},
+ #                 {'from': Dt.test, 'to': Dt.source}]
+ #         }
+
 def related_filenames(path, info):
     basename_types = [BasenameType(key, value) for key, value in info['basename_types'].items()]
     dir_types = [Dirtype(key, value) for key, value in info['dir_types'].items()]
