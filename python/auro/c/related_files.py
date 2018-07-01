@@ -39,8 +39,8 @@ related_header_info = [
 
 related_source_info = [
         {
-        'bt':[ {'from': [Bt.hpp, Bt.test], 'to': Bt.cpp},
-               {'from': [Bt.h,   Bt.test], 'to': Bt.c}]
+        'bt':[ {'from': [Bt.h, Bt.test, Bt.hpp], 'to': Bt.cpp},
+               {'from': [Bt.h, Bt.test],         'to': Bt.c}]
         'dt':[ {'from': [Dt.public, Dt.test_public], 'to': [Dt.public, Dt.protected, Dt.private]},
                {'from': [Dt.protected],        'to': [Dt.protected] },
                {'from': [Dt.private],          'to': [Dt.private]] },
