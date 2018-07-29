@@ -4,14 +4,14 @@ from pathlib import PurePath, Path
 from pprint import pprint
 import re
 
-Bt = Enum('BasenameType', 'source test')
+Bt = Enum('BasenameTypeEnum', 'source test')
 
 basename_types = {
         Bt.source: '.py',
         Bt.test: 'test_{name}.py'
         }
 
-Dt = Enum('DirType', 'source test')
+Dt = Enum('DirTypeEnum', 'source test')
 
 dir_types = {
         Dt.source: '{base_dir}/python/{namespace}',
@@ -36,11 +36,46 @@ related_test_info = {
         'dir_types':      dir_types
         }
 
- #  = {
- #         'bt': [ {'from': Bt.test, 'to': Bt.source},
- #                 {'from': Dt.test, 'to': Dt.source}]
- #         }
+##################################################
 
+related_source_info2 = {
+        'bt':             [{'from': [Bt.test], 'to': [Bt.source]}],
+        'dt':             [{'from': [Dt.test], 'to': [Dt.source]}],
+        'basename_types': basename_types,
+        'dir_types':      dir_types
+        }
+
+related_test_info2 = {
+        'bt':             [{'from': [Bt.source], 'to': [Bt.test]}],
+        'dt':             [{'from': [Dt.source], 'to': [Dt.test]}],
+        'basename_types': basename_types,
+        'dir_types':      dir_types
+        }
+
+##################################################
+
+import itertools
+def flatten(list_of_lists):
+    return list(itertools.chain(*list_of_lists))
+
+def related_filenames2(path, info):
+    basename_types = [BasenameType(key, value) for key, value in info['basename_types'].items()]
+    dir_types = [Dirtype(key, value) for key, value in info['dir_types'].items()]
+
+    from_basename = Basename(basename_types , path)
+    from_dirname = Dirname(dir_types, path)
+
+    to_basename_type_enums = flatten([from_to_pair['to'] for from_to_pair in info['bt'] if from_basename.type in from_to_pair['from']])
+    to_basename_types = [bn_type for bn_type in basename_types if bn_type.type in to_basename_type_enums]
+    to_basenames = [create_basename(from_basename, to_bt) for to_bt in to_basename_types]
+
+    to_dirname_type_enums = flatten([from_to_pair['to'] for from_to_pair in info['dt'] if from_dirname.type in from_to_pair['from']])
+    to_dirname_types = [dn_type for dn_type in dir_types if dn_type.type in to_dirname_type_enums]
+    to_dirnames = [create_dirname(from_dirname, to_dt) for to_dt in to_dirname_types]
+
+    related_filenames = [str(PurePath(dirname) / PurePath(basename)) for dirname, basename in list(product(to_dirnames, to_basenames))]
+    return related_filenames
+    
 def related_filenames(path, info):
     basename_types = [BasenameType(key, value) for key, value in info['basename_types'].items()]
     dir_types = [Dirtype(key, value) for key, value in info['dir_types'].items()]
@@ -68,6 +103,8 @@ class BasenameType():
 
     @staticmethod
     def _parse_pre_and_suffix(type_str):
+        print("█ type_str:")
+        pprint(type_str)
         bt_has_name_matches = re.match(r'(?P<prefix>.*){name}(?P<suffix>.*)', type_str)
         if bt_has_name_matches:
             return bt_has_name_matches.group('prefix'), bt_has_name_matches.group('suffix')
@@ -104,13 +141,13 @@ class BasenameMatch():
 
 class Basename():
     def __init__(self, basename_types, path = None):
-        self.types = []
+        self.type = None
         self.name = ''
         self.__basename_types = basename_types
         if path:
-            self.process(path)
+            self.parse(path)
     
-    def process(self, path):
+    def parse(self, path):
         path = PurePath(path)
         basename_matches = []
         for bt in self.__basename_types:
@@ -119,13 +156,13 @@ class Basename():
                 basename_matches.append(bm)
         # presuming the shortest name match is the actual name
         best_match = min(basename_matches, key = lambda bm: len(bm.name))
-        self.types.append(best_match.type.type)
+        self.type = best_match.type.type
         self.name = best_match.name
 
     def __str__(self):
         result = ''
-        result += 'types : ' + str(self.types) + '\n'
-        result += 'name  : ' + self.name
+        result += 'type : ' + str(self.type) + '\n'
+        result += 'name : ' + self.name
         return result
 
     def __repr__(self):
@@ -169,16 +206,16 @@ class DirnameMatch():
 
 class Dirname():
     def __init__(self, dir_types, path = None):
-        self.types = [] 
+        self.type = None
         self.base_dir = ''
         self.namespace = ''
         # dir_part = the part between base_dir and namespace
         self.dir_part = ''
         self.__dir_types = dir_types
         if path:
-            self.process(path)
+            self.parse(path)
 
-    def process(self, path):
+    def parse(self, path):
         dirname = str(Path(path).parent)
         dirname_matches = []
         for dt in self.__dir_types:
@@ -187,18 +224,24 @@ class Dirname():
                 dirname_matches.append(dm)
                 #  self.types.append(dt.type)
         best_match = min(dirname_matches, key = lambda dm: len(dm.namespace))
-        self.types.append(best_match.type.type)
+        self.type = best_match.type.type
         self.base_dir = best_match.base_dir
         self.namespace = best_match.namespace
         self.dir_part = best_match.dir_part
 
     def __str__(self):
         result = ''
-        result += 'types     : ' + str(self.types) + '\n'
+        result += 'type      : ' + str(self.type) + '\n'
         result += 'base_dir  : ' + self.base_dir + '\n'
         result += 'dir_part  : ' + self.dir_part + '\n'
         result += 'namespace : ' + self.namespace
         return result
+
+    def __repr__(self):
+        return str(self)
+
+def to_bt_for(from_bt, info):
+    pass
 
 def is_valid_from_bt_dt(basename, dirname, info):
     bt_matches = set(basename.types) == set(info['from_bt'])
