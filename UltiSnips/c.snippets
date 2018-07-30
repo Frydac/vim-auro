@@ -9,7 +9,7 @@ def is_win_drive_letter(string):
 
 # create classname, extension without leading ., and an array of 
 # namespaces upto one of the stop_folders
-def split_source_fn(path, stop_folders = ['inc', 'src']):
+def split_source_fn(path, stop_folders = ['public', 'protected', 'private']):
     #folder parts to stop searching for namespaces
     rest_path, fn = os.path.split(path)
     classname, extension = os.path.splitext(fn)
