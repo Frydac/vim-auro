@@ -11,9 +11,15 @@ def goc_related_filename(key_nr):
     print("Finding related headers")
     if len(infos) < index:
         print("* No info available for nr: " + nr)
-    related_header_info = infos[index]
+    related_file_info = infos[index]
     fn_buffer = vim.current.buffer.name
-    fns_related = related_filenames(fn_buffer, related_header_info)
+    fns_related = related_filenames(fn_buffer, related_file_info)
+    if len(fns_related) == 0:
+        print("No potential related files found with:")
+        print("filename: " + fn_buffer)
+        print("related_file_info: ")
+        pprint(related_file_info)
+
     existing_fns_related = [fn_related for fn_related in fns_related if os.path.isfile(fn_related)]
     if len(existing_fns_related) == 1:
         vim.command("e " + existing_fns_related[0])
