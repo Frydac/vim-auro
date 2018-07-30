@@ -26,7 +26,7 @@ sys.path.insert(0, os.path.join(vim.eval("g:auro_plugin_dir"), 'lib'))
 from auro.vim.c.related_files import goc_related_filename
 endpython
 
-nnoremap <buffer> <leader>1 :py3 goc_related_filename(1)<cr>
-nnoremap <buffer> <leader>2 :py3 goc_related_filename(2)<cr>
-nnoremap <buffer> <leader>3 :py3 goc_related_filename(3)<cr>
+nnoremap <buffer> <silent> <leader>1 :py3 goc_related_filename(1)<cr>
+nnoremap <buffer> <silent> <leader>2 :py3 goc_related_filename(2)<cr>
+nnoremap <buffer> <silent> <leader>3 :py3 goc_related_filename(3)<cr>
 

@@ -1,5 +1,5 @@
 from auro.path import AuroPath, Ft, include_path
-from auro.c.related_files import existing_related_header_fns
+#  from auro.c.related_files import existing_related_header_fns
 from pprint import pprint
 import datetime
 import re
@@ -107,13 +107,13 @@ def class_snip(path: AuroPath):
     snip_body += '};'
     return snip_body
 
-def c_related_header_include_snip(path: AuroPath):
-    header_fns = existing_related_header_fns(path)
-    snip_body = ""
-    for header_fn in header_fns:
-        inc_name = include_path(AuroPath(header_fn))
-        snip_body += "#include \"%s\"\n" % inc_name
-    return snip_body
+#  def c_related_header_include_snip(path: AuroPath):
+#      header_fns = existing_related_header_fns(path)
+#      snip_body = ""
+#      for header_fn in header_fns:
+#          inc_name = include_path(AuroPath(header_fn))
+#          snip_body += "#include \"%s\"\n" % inc_name
+#      return snip_body
     
 def _init_c_header_snip(path: AuroPath):
     snip_body = ""
@@ -126,26 +126,26 @@ def _init_c_header_snip(path: AuroPath):
     snip_body += IncludeGuard.close() + '\n'
     return snip_body
 
-def _init_c_source_snip(path: AuroPath):
-    "includes all existing possible c headers"
-    snip_body = ''
-    snip_body += c_related_header_include_snip(path) + "\n"
-    return snip_body
+#  def _init_c_source_snip(path: AuroPath):
+#      "includes all existing possible c headers"
+#      snip_body = ''
+#      snip_body += c_related_header_include_snip(path) + "\n"
+#      return snip_body
 
-def _init_cpp_source_snip(path: AuroPath):
-    "includes all existing possible headers, c an cpp"
-    snip_body = ''
-    snip_body += c_related_header_include_snip(path) + "\n"
-    ns_open = Namespaces.open(path)
-    level = 0
-    if ns_open:
-        snip_body += Namespaces.open(path) + '\n\n'
-        level = 1
-    snip_body += '    ' * level + '$0\n\n'
-    if ns_open:
-        snip_body += Namespaces.close() + '\n'
+#  def _init_cpp_source_snip(path: AuroPath):
+#      "includes all existing possible headers, c an cpp"
+#      snip_body = ''
+#      snip_body += c_related_header_include_snip(path) + "\n"
+#      ns_open = Namespaces.open(path)
+#      level = 0
+#      if ns_open:
+#          snip_body += Namespaces.open(path) + '\n\n'
+#          level = 1
+#      snip_body += '    ' * level + '$0\n\n'
+#      if ns_open:
+#          snip_body += Namespaces.close() + '\n'
 
-    return snip_body
+#      return snip_body
 
 def _init_cpp_header_snip(path: AuroPath):
     snip_body = ""
@@ -174,7 +174,7 @@ def init_snip(path: AuroPath):
             return _init_c_header_snip(path)
         else:
             print('c_source')
-            return _init_c_source_snip(path)
+            #  return _init_c_source_snip(path)
     elif path.filetype == Ft.cpp:
         if is_header:
             print('cpp_header')
@@ -184,7 +184,7 @@ def init_snip(path: AuroPath):
             return _init_cpp_test_source_snip(path)
         else:
             print('cpp_source')
-            return _init_cpp_source_snip(path)
+            #  return _init_cpp_source_snip(path)
     else:
         raise AssertionError("filetype should not be handled by this function")
 

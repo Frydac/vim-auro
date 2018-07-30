@@ -20,7 +20,7 @@ dir_types = {
         Dt.public:         '{base_dir}/public/{namespace}',
         Dt.protected:      '{base_dir}/protected/{namespace}',
         Dt.private:        '{base_dir}/private/{namespace}',
-        Dt.test_public:    '{base_dir}/test/private/{namespace}',
+        Dt.test_public:    '{base_dir}/test/public/{namespace}',
         Dt.test_protected: '{base_dir}/test/protected/{namespace}',
         Dt.test_private:   '{base_dir}/test/private/{namespace}',
 
@@ -62,7 +62,7 @@ related_source_info = {
 
 related_test_info = {
         'bt':[{'from': [Bt.h, Bt.hpp, Bt.c, Bt.cpp], 'to': [Bt.test]} ],
-        'dt':[{'from': [Dt.public],    'to': [Dt.test_public, Dt.private]},
+        'dt':[{'from': [Dt.public],    'to': [Dt.test_public, Dt.test_private]},
               {'from': [Dt.protected], 'to': [Dt.test_protected]},
               {'from': [Dt.private],   'to': [Dt.test_private]},
 
