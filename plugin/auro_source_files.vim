@@ -24,9 +24,10 @@ nnoremap <silent><leader>am :py3 chdir_to_module_dir()<cr>
 python3 << endpython
 import vim, sys, os
 sys.path.insert(0, os.path.join(vim.eval("g:auro_plugin_dir"), 'lib'))
-from auro.vim.related_files import goc_related_filename
+from auro.vim.related_files import goc_related_filename, find_files_that_include
 endpython
 
 nnoremap <silent> <leader>1 :py3 goc_related_filename(1)<cr>
 nnoremap <silent> <leader>2 :py3 goc_related_filename(2)<cr>
 nnoremap <silent> <leader>3 :py3 goc_related_filename(3)<cr>
+nnoremap <silent> <leader>af :py3 find_files_that_include()<cr>

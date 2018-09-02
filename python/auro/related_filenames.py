@@ -27,6 +27,16 @@ def related_filenames(path, info):
 
     related_filenames = [str(PurePath(dirname) / PurePath(basename)) for dirname, basename in list(product(to_dirnames, to_basenames))]
     return related_filenames
+
+class Pathh():
+    def __init__(self, fn, basename_matchers):
+        self.basename = os.path.splitext(os.path.basename(fn))[0]
+
+        dir_matchers = [Dirtype(key, value) for key, value in basename_matchers.items()]
+        self.dirname = Dirname(dir_matchers, fn)
+
+    def fn_include(self):
+        return Path(self.dirname.namespace) / self.basename
     
 def related_filenames_old(path, info):
     basename_types = [BasenameType(key, value) for key, value in info['basename_types'].items()]

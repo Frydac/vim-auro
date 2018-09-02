@@ -1,6 +1,6 @@
 from auro.related_filenames_infos import infos
 from auro.path import AuroPath
-from auro.related_filenames import related_filenames
+from auro.related_filenames import related_filenames, Pathh
 from pathlib import PurePath, Path
 from pprint import pprint
 import vim
@@ -98,3 +98,15 @@ def goc_related_filename(key_nr):
     else:
         let_user_choose_to_open_file(existing_fns_related)
 
+
+def find_files_that_include():
+    infos_ft = infos[vim_filetype()]
+    if not infos_ft:
+        print("No info available for filetype {}".format(vim_filetype()))
+        return
+    # TODO: should find and merge all matchers, probably do in pathh (this could crash)
+    dirname_matchers = infos_ft[1]['dir_types']
+
+    fn_buffer = vim.current.buffer.name
+    path = Pathh(fn_buffer, dirname_matchers)
+    vim.command("Rg include.*{}".format(path.fn_include()))
