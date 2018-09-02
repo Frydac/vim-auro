@@ -20,3 +20,13 @@ nnoremap <silent><leader>pap :py3 print(AuroPath(vim.current.buffer.name))<cr>
 nnoremap <silent><leader>ad :py3 chdir_to_current_file_dir()<cr>
 nnoremap <silent><leader>as :py3 chdir_to_supermodule_dir()<cr>
 nnoremap <silent><leader>am :py3 chdir_to_module_dir()<cr>
+
+python3 << endpython
+import vim, sys, os
+sys.path.insert(0, os.path.join(vim.eval("g:auro_plugin_dir"), 'lib'))
+from auro.vim.related_files import goc_related_filename
+endpython
+
+nnoremap <silent> <leader>1 :py3 goc_related_filename(1)<cr>
+nnoremap <silent> <leader>2 :py3 goc_related_filename(2)<cr>
+nnoremap <silent> <leader>3 :py3 goc_related_filename(3)<cr>

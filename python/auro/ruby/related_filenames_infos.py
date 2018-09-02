@@ -3,15 +3,15 @@ from enum import Enum
 Bt = Enum('BasenameTypeEnum', 'source test')
 
 basename_types = {
-        Bt.source: ['.py'],
-        Bt.test: ['test_{name}.py']
+        Bt.source: ['.rb'],
+        Bt.test: ['_tests.rb']
         }
 
 Dt = Enum('DirTypeEnum', 'source test')
 
 dir_types = {
-        Dt.source: '{base_dir}/python/{namespace}',
-        Dt.test: '{base_dir}/python/test/{namespace}'
+        Dt.source: '{base_dir}/ruby/{namespace}',
+        Dt.test: '{base_dir}/test/ruby/{namespace}'
         }
 
 related_source_info = {
@@ -29,7 +29,7 @@ related_test_info = {
         }
 
 infos = {}
-infos['python'] = [None, related_source_info, related_test_info]
+infos['ruby'] = [None, related_source_info, related_test_info]
 
 
 

@@ -19,11 +19,11 @@ def related_filenames(path, info):
 
     to_basename_type_enums = flatten([from_to_pair['to'] for from_to_pair in info['bt'] if from_basename.type in from_to_pair['from']])
     to_basename_types = [bn_type for bn_type in basename_types if bn_type.type in to_basename_type_enums]
-    to_basenames = [create_basename(from_basename, to_bt) for to_bt in to_basename_types]
+    to_basenames = [create_related_basename(from_basename, to_bt) for to_bt in to_basename_types]
 
     to_dirname_type_enums = flatten([from_to_pair['to'] for from_to_pair in info['dt'] if from_dirname.type in from_to_pair['from']])
     to_dirname_types = [dn_type for dn_type in dir_types if dn_type.type in to_dirname_type_enums]
-    to_dirnames = [create_dirname(from_dirname, to_dt) for to_dt in to_dirname_types]
+    to_dirnames = [create_related_dirname(from_dirname, to_dt) for to_dt in to_dirname_types]
 
     related_filenames = [str(PurePath(dirname) / PurePath(basename)) for dirname, basename in list(product(to_dirnames, to_basenames))]
     return related_filenames
@@ -38,15 +38,19 @@ def related_filenames_old(path, info):
         return None
     
     to_basename_types = [bn_type for bn_type in basename_types if bn_type.type in info['to_bt']]
-    to_basenames = [create_basename(from_basename, to_bt) for to_bt in to_basename_types]
+    to_basenames = [create_related_basename(from_basename, to_bt) for to_bt in to_basename_types]
     
     to_dirtypes = [dir_type for dir_type in dir_types if dir_type.type in info['to_dt']]
-    to_dirnames = [create_dirname(from_dirname, to_dt) for to_dt in to_dirtypes]
+    to_dirnames = [create_related_dirname(from_dirname, to_dt) for to_dt in to_dirtypes]
 
     related_filenames = [str(PurePath(dirname) / PurePath(basename)) for dirname, basename in list(product(to_dirnames, to_basenames))]
     return related_filenames
 
 class BasenameType():
+    """
+    Wrapper around a basename type matcher, that parses the user provided
+    description.
+    """
     def __init__(self, bn_type, bn_type_str):
         assert isinstance(bn_type, Enum)
         self.type = bn_type
@@ -75,6 +79,10 @@ class BasenameType():
         return str(self)
 
 class BasenameMatch():
+    """
+    Matches one bn_type with a given basename, holds the result and converts to
+    bool to indicate a successful match
+    """
     def __init__(self, bn_type, basename):
         assert isinstance(bn_type, BasenameType)
         self.type = bn_type
@@ -183,7 +191,7 @@ class Dirname():
             if dm:
                 dirname_matches.append(dm)
                 #  self.types.append(dt.type)
-        best_match = min(dirname_matches, key = lambda dm: len(dm.base_dir))
+        best_match = max(dirname_matches, key = lambda dm: len(dm.dir_part))
         self.type = best_match.type.type
         self.base_dir = best_match.base_dir
         self.namespace = best_match.namespace
@@ -200,29 +208,26 @@ class Dirname():
     def __repr__(self):
         return str(self)
 
-def to_bt_for(from_bt, info):
-    pass
-
 def is_valid_from_bt_dt(basename, dirname, info):
     bt_matches = set(basename.types) == set(info['from_bt'])
     dt_matches = set(dirname.types) == set(info['from_dt'])
     return (bt_matches and dt_matches)
 
-def create_dirname(dirname, dir_type):
-    assert isinstance(dirname, Dirname)
-    assert isinstance(dir_type, Dirtype)
+def create_related_dirname(from_dirname, to_dir_type):
+    assert isinstance(from_dirname, Dirname)
+    assert isinstance(to_dir_type, Dirtype)
     result = ''
-    result += dirname.base_dir
-    result += dir_type.dir_part
-    result += dirname.namespace
+    result += from_dirname.base_dir
+    result += to_dir_type.dir_part
+    result += from_dirname.namespace
     return result
 
-def create_basename(basename, basename_type):
-    assert isinstance(basename, Basename)
-    assert isinstance(basename_type, BasenameType)
+def create_related_basename(from_basename, to_basename_type):
+    assert isinstance(from_basename, Basename)
+    assert isinstance(to_basename_type, BasenameType)
     result = ''
-    result += basename_type.prefix
-    result += basename.name
-    result += basename_type.suffix
+    result += to_basename_type.prefix
+    result += from_basename.name
+    result += to_basename_type.suffix
     return result
 

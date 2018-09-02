@@ -20,13 +20,13 @@ command! -buffer AuroFindCurrentFileIncludes call c#auro_source_files#FindCurren
 "calling non-existing function -> reload autoload buffer trick
 nnoremap <buffer> <leader>7 :silent! call c#auro_source_files#Reload()<cr>
 
-python3 << endpython
-import vim, sys, os
-sys.path.insert(0, os.path.join(vim.eval("g:auro_plugin_dir"), 'lib'))
-from auro.vim.c.related_files import goc_related_filename
-endpython
+" python3 << endpython
+" import vim, sys, os
+" sys.path.insert(0, os.path.join(vim.eval("g:auro_plugin_dir"), 'lib'))
+" from auro.vim.c.related_files import goc_related_filename
+" endpython
 
-nnoremap <buffer> <silent> <leader>1 :py3 goc_related_filename(1)<cr>
-nnoremap <buffer> <silent> <leader>2 :py3 goc_related_filename(2)<cr>
-nnoremap <buffer> <silent> <leader>3 :py3 goc_related_filename(3)<cr>
+" nnoremap <buffer> <silent> <leader>1 :py3 goc_related_filename(1)<cr>
+" nnoremap <buffer> <silent> <leader>2 :py3 goc_related_filename(2)<cr>
+" nnoremap <buffer> <silent> <leader>3 :py3 goc_related_filename(3)<cr>
 

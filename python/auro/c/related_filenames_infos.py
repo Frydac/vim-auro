@@ -72,5 +72,8 @@ related_test_info = {
         'dir_types': dir_types
         }
 
-infos = [related_header_info, related_source_info, related_test_info]
+c_cpp_infos = [related_header_info, related_source_info, related_test_info] 
+infos = {}
+infos['c'] = c_cpp_infos
+infos['cpp'] = c_cpp_infos
 
