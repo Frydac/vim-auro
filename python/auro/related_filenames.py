@@ -30,13 +30,16 @@ def related_filenames(path, info):
 
 class Pathh():
     def __init__(self, fn, basename_matchers):
-        self.basename = os.path.splitext(os.path.basename(fn))[0]
+        self.basename, self.ext = os.path.splitext(os.path.basename(fn))
 
         dir_matchers = [Dirtype(key, value) for key, value in basename_matchers.items()]
         self.dirname = Dirname(dir_matchers, fn)
 
+    def fn_include_no_ext(self):
+        return str(Path(self.dirname.namespace) / self.basename).replace('\\', '/')
+
     def fn_include(self):
-        return Path(self.dirname.namespace) / self.basename
+        return self.fn_include_no_ext() + self.ext
     
 def related_filenames_old(path, info):
     basename_types = [BasenameType(key, value) for key, value in info['basename_types'].items()]

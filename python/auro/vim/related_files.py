@@ -100,13 +100,21 @@ def goc_related_filename(key_nr):
 
 
 def find_files_that_include():
+    #TODO: this should go in infos file?
     infos_ft = infos[vim_filetype()]
+    filetype = vim_filetype()
     if not infos_ft:
-        print("No info available for filetype {}".format(vim_filetype()))
+        print("No info available for filetype {}".format(filetype))
         return
     # TODO: should find and merge all matchers, probably do in pathh (this could crash)
     dirname_matchers = infos_ft[1]['dir_types']
 
     fn_buffer = vim.current.buffer.name
     path = Pathh(fn_buffer, dirname_matchers)
-    vim.command("Rg include.*{}".format(path.fn_include()))
+    keyword = {"c": "include", "cpp": "include", "ruby": "require"}[filetype]
+    fn_include = ""
+    if filetype == "ruby":
+        fn_include = path.fn_include_no_ext()
+    else:
+        fn_include = path.fn_include()
+    vim.command("Rg {}.*{}".format(keyword, fn_include))
