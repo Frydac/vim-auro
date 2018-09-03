@@ -32,7 +32,7 @@ dir_types = {
 
 related_header_info = {
         'bt': [{'from': [Bt.cpp, Bt.test], 'to': [Bt.hpp, Bt.h]},
-               {'from': [Bt.c, Bt.test],   'to': [Bt.h]}],
+               {'from': [Bt.c],            'to': [Bt.h]}],
 
         'dt': [{'from': [Dt.public, Dt.test_public],       'to': [Dt.public]},
                {'from': [Dt.protected, Dt.test_protected], 'to': [Dt.protected, Dt.public]},
