@@ -1,6 +1,7 @@
 from auro.related_filenames_infos import infos
 from auro.path import AuroPath
-from auro.related_filenames import related_filenames, Pathh
+from auro.related_filenames import related_filenames
+from auro.path import AuroPath2
 from pathlib import PurePath, Path
 from pprint import pprint
 import vim
@@ -106,11 +107,11 @@ def find_files_that_include():
     if not infos_ft:
         print("No info available for filetype {}".format(filetype))
         return
-    # TODO: should find and merge all matchers, probably do in pathh (this could crash)
+    # TODO: should find and merge all matchers, probably do in AuroPath2 (this could crash)
     dirname_matchers = infos_ft[1]['dir_types']
 
     fn_buffer = vim.current.buffer.name
-    path = Pathh(fn_buffer, dirname_matchers)
+    path = AuroPath2(fn_buffer, dirname_matchers)
     keyword = {"c": "include", "cpp": "include", "ruby": "require"}[filetype]
     fn_include = ""
     if filetype == "ruby":

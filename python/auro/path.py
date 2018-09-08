@@ -1,3 +1,22 @@
+from auro.dirname import Dirname, DirnameMatcher
+import os
+
+class AuroPath2():
+    def __init__(self, fn, basename_matchers):
+        self.basename, self.ext = os.path.splitext(os.path.basename(fn))
+
+        dir_matchers = [DirnameMatcher(key, value) for key, value in basename_matchers.items()]
+        self.dirname = Dirname(dir_matchers, fn)
+
+    def fn_include_no_ext(self):
+        return str(Path(self.dirname.namespace) / self.basename).replace('\\', '/')
+
+    def fn_include(self):
+        return self.fn_include_no_ext() + self.ext
+    
+
+# Below Deprecated, though might reuse parts ----------------------
+
 from enum import Enum
 from pathlib import PurePath, Path
 from pprint import pprint
