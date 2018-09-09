@@ -1,19 +1,28 @@
 from auro.dirname import Dirname, DirnameMatcher
+from auro.basename import Basename
+from auro.related_filenames_infos import infos
 import os
 
-class AuroPath2():
-    def __init__(self, fn, basename_matchers):
-        self.basename, self.ext = os.path.splitext(os.path.basename(fn))
 
-        dir_matchers = [DirnameMatcher(key, value) for key, value in basename_matchers.items()]
-        self.dirname = Dirname(dir_matchers, fn)
+class AuroPath2():
+    def __init__(self, fn, basename_matchers, dirname_matchers):
+        self.__bn_matchers = basename_matchers
+        self.__dn_matchers = dirname_matchers
+        self.init(fn)
+
+    def init(self, fn):
+        self.long_basename, self.ext = os.path.splitext(os.path.basename(fn))
+        self.dirname = Dirname(self.__dn_matchers, fn)
+        self.basename = Basename(self.__bn_matchers, fn)
+        return self
 
     def fn_include_no_ext(self):
+        print("█ basename:")
+        pprint(self.basename)
         return str(Path(self.dirname.namespace) / self.basename).replace('\\', '/')
 
     def fn_include(self):
         return self.fn_include_no_ext() + self.ext
-    
 
 # Below Deprecated, though might reuse parts ----------------------
 

@@ -8,3 +8,9 @@ from auro.python.related_filenames_infos import infos as python_infos
 
 infos = {**c_infos, **ruby_infos, **python_infos}
 
+#  def get_info(fn):
+    # use vim filetypedetect to get filetype for current file:
+    # https://vi.stackexchange.com/questions/9962/get-filetype-by-extension-or-filename-in-vimscript
+    # 
+    #  pass
+

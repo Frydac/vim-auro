@@ -2,30 +2,30 @@ from enum import Enum
 
 Bt = Enum('BasenameTypeEnum', 'source test')
 
-basename_types = {
+basename_matchers = {
         Bt.source: ['.py'],
         Bt.test: ['test_{name}.py']
         }
 
-Dt = Enum('DirTypeEnum', 'source test')
+Dt = Enum('DirnameTypeEnum', 'source test')
 
-dir_types = {
+dirname_matchers = {
         Dt.source: '{base_dir}/python/{namespace}',
         Dt.test: '{base_dir}/python/test/{namespace}'
         }
 
 related_source_info = {
-        'bt':             [{'from': [Bt.test], 'to': [Bt.source]}],
-        'dt':             [{'from': [Dt.test], 'to': [Dt.source]}],
-        'basename_types': basename_types,
-        'dir_types':      dir_types
+        'basename_mapping':             [{'from': [Bt.test], 'to': [Bt.source]}],
+        'dirname_mapping':             [{'from': [Dt.test], 'to': [Dt.source]}],
+        'basename_matchers': basename_matchers,
+        'dirname_matchers':      dirname_matchers
         }
 
 related_test_info = {
-        'bt':             [{'from': [Bt.source], 'to': [Bt.test]}],
-        'dt':             [{'from': [Dt.source], 'to': [Dt.test]}],
-        'basename_types': basename_types,
-        'dir_types':      dir_types
+        'basename_mapping':             [{'from': [Bt.source], 'to': [Bt.test]}],
+        'dirname_mapping':             [{'from': [Dt.source], 'to': [Dt.test]}],
+        'basename_matchers': basename_matchers,
+        'dirname_matchers':      dirname_matchers
         }
 
 infos = {}

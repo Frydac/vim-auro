@@ -48,21 +48,21 @@ class DirnameMatch():
         return bool(self.base_dir) and bool(self.namespace)
 
 class Dirname():
-    def __init__(self, dir_types, path = None):
+    def __init__(self, dirname_matchers, path = None):
         self.type = None
         self.base_dir = ''
         self.namespace = ''
         # dir_part = the part between base_dir and namespace
         self.dir_part = ''
-        self.__dir_types = dir_types
+        self.__dn_matchers = dirname_matchers
         if path:
             self.parse(path)
 
     def parse(self, path):
         dirname = str(Path(path).parent)
         dirname_matches = []
-        for dt in self.__dir_types:
-            dm = DirnameMatch(dt, dirname)
+        for dn_matcher in self.__dn_matchers:
+            dm = DirnameMatch(dn_matcher, dirname)
             if dm:
                 dirname_matches.append(dm)
         best_match = max(dirname_matches, key = lambda dm: len(dm.dir_part))
