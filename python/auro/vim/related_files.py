@@ -1,6 +1,8 @@
 from auro.related_filenames_infos import infos
 from auro.related_filenames import related_filenames
 from auro.path import AuroPath2
+from auro.vim.filename import Filename
+from auro.vim.utils import vim_filetype
 from auro.basename import BasenameMatcher
 from auro.dirname import DirnameMatcher
 from pathlib import PurePath, Path
@@ -8,6 +10,7 @@ from pprint import pprint
 import vim
 import os.path
 import json
+import re
 
 def vim_input(message = 'input'):
     vim.command('call inputsave()')
@@ -23,12 +26,6 @@ def vim_inputlist(message, choices):
     vim.command('let user_input = inputlist( ' + ary_str  + ' )')
     vim.command('call inputrestore()')
     return vim.eval('user_input')
-
-def vim_filetype():
-    """
-    filetype current buffer, determined by vim's ftdetect
-    """
-    return vim.eval('&filetype')
 
 def let_user_choose_list(message, choices):
     assert len(choices) > 0
@@ -143,15 +140,40 @@ def dn_bn_matchers_current_buffer():
     dirname_matchers = [DirnameMatcher(key, value) for key, value in infos_ft[1]['dirname_matchers'].items()]
     return basename_matchers, dirname_matchers 
 
-def find_files_that_include(fn_buffer):
-    dirname_matchers = current_buffer_dirname_matchers()
+def re_c_cpp_include(filename):
+    return "include.*{}".format(filename.fn_include())
 
-    #  fn_buffer = vim.current.buffer.name
-    path = AuroPath2(fn_buffer, dirname_matchers)
-    keyword = {"c": "include", "cpp": "include", "ruby": "require"}[filetype]
-    fn_include = ""
-    if filetype == "ruby":
-        fn_include = path.fn_include_no_ext()
-    else:
-        fn_include = path.fn_include()
-    vim.command("Rg {}.*{}".format(keyword, fn_include))
+def re_ruby_require(filename):
+    return "require.*{}".format(filename.fn_include_no_ext())
+
+def re_python_import(filename):
+    fn_include = '.'.join(filename.namespace_parts()) + ".{}".format(filename.basename.stem)
+    #need to escape | for the vim commandline (pipe), and need to escape \ for the python string.
+    return "(from\\|import).*{}".format(fn_include)
+
+def re_include(filename):
+    re_include_by_ft = {
+            "ruby": re_ruby_require,
+            "python": re_python_import,
+            "c": re_c_cpp_include,
+            "cpp": re_c_cpp_include
+            }
+    return re_include_by_ft[filename.filetype](filename)
+
+def rg_type_filter(filename):
+    rg_type = {
+            "ruby": "-truby",
+            "python": "-tpy",
+            "c": "-tc -tcpp",
+            "cpp": "-tc -tcpp",
+            }
+    return rg_type[filename.filetype]
+
+def find_files_that_include(fn_buffer = None):
+    "fn_buffer = None -> use current buffer"
+    fn = Filename(fn_buffer)
+    regex = re_include(fn)
+    rg_type_filt = rg_type_filter(fn)
+    cmd = "Rg {} \"{}\"".format(rg_type_filt, regex)
+    print("Search command: {}".format(cmd))
+    vim.command(cmd)

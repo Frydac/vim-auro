@@ -9,13 +9,19 @@ class Basename():
     def __init__(self, basename_matchers, path = None):
         assert all(isinstance(elem, BasenameMatcher) for elem in basename_matchers)
         self.type = None
+        # name is what is left after basename matching
         self.name = ''
+        # stem is the full basename without ext
+        self.stem = ''
+        self.ext = ''
         self.__bn_matchers = basename_matchers
         if path:
             self.parse(path)
     
     def parse(self, path):
         path = PurePath(path)
+        self.stem = path.stem
+        self.ext = path.suffix
         basename_matches = []
         for bn_matcher in self.__bn_matchers:
             bm = BasenameMatch(bn_matcher, path.name)

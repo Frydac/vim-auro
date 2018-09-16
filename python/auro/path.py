@@ -19,7 +19,7 @@ class AuroPath2():
     def fn_include_no_ext(self):
         print("█ basename:")
         pprint(self.basename)
-        return str(Path(self.dirname.namespace) / self.basename).replace('\\', '/')
+        return str(Path(self.dirname.namespace) / self.basename.stem).replace('\\', '/')
 
     def fn_include(self):
         return self.fn_include_no_ext() + self.ext
