@@ -25,4 +25,4 @@ nnoremap <silent><leader>am :py3 chdir_to_module_dir()<cr>
 nnoremap <silent> <leader>1 :py3 goc_related_filename(1)<cr>
 nnoremap <silent> <leader>2 :py3 goc_related_filename(2)<cr>
 nnoremap <silent> <leader>3 :py3 goc_related_filename(3)<cr>
-nnoremap <silent> <leader>af :py3 find_files_that_include(vim.current.buffer.name)<cr>
+nnoremap <silent> <leader>af :py3 find_files_that_include()<cr>

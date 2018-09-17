@@ -3,6 +3,7 @@ from auro.vim.utils import vim_filetype
 from pathlib import PurePath, Path
 from auro.dirname import Dirname, DirnameMatcher
 from auro.basename import Basename, BasenameMatcher
+import vim
 
 parsed_infos = {}
 for ft, ft_info in infos.items():

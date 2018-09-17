@@ -1,12 +1,14 @@
 import vim
 from pathlib import PurePath
 import re
+from pprint import pprint
 
 def vim_filetype(fn = None):
     """
     Try to parse and find the filetype that vim would assign based on file extension.
     Or get the current buffer's filetype, which is more robust.
     """
+
     if not fn:
         return vim.eval('&filetype')
 
