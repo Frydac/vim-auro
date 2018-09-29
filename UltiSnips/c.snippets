@@ -407,7 +407,6 @@ def expand_include_auro(snip):
 def expand_include_auro_path(snip):
 	snippet_body = '#include "%s"$0' % Filename().namespace_str()
 	snip.expand_anon(snippet_body)
-	
 
 def add_current_cursor_pos_to_jumplist():
 	vim.command(":normal m'")
@@ -415,14 +414,17 @@ def add_current_cursor_pos_to_jumplist():
 def del_current_line(snip):
 	del(snip.buffer[snip.line])
 
-
-def del_line_and_move_cursor_to_includes(snip):
+def del_line_and_move_cursor_to_includes(snip, to_auro_includes = False):
 	includes = find_includes(AuroPath(vim.current.buffer.name))
 	if not includes:
 		print("vim-auro snippet warning: No includes found inserting on current line")		
 		return
-	del_current_line(snip)
 	last_include_lineix = max(includes.keys())
+
+	if snip.line <= (last_include_lineix + 1):
+		return
+
+	del_current_line(snip)
 	add_current_cursor_pos_to_jumplist()
 	snip.buffer.append('', last_include_lineix + 1)
 	snip.cursor.set(last_include_lineix + 1, 0)
