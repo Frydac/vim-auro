@@ -1,10 +1,10 @@
-command! -buffer AuroHxx call c#auro_source_files#OpenHxxFile()
-command! -buffer AuroCxx call c#auro_source_files#OpenCxxFile()
-command! -buffer AuroTest call c#auro_source_files#OpenTestFile()
-command! -buffer AuroImplHpp call c#auro_source_files#OpenImplHppFile()
-command! -buffer AuroImplCpp call c#auro_source_files#OpenImplCppFile()
-command! -buffer AuroImplTest call c#auro_source_files#OpenImplTestFile()
-command! -buffer AuroFindCurrentFileIncludes call c#auro_source_files#FindCurrentFileIncludes()
+" command! -buffer AuroHxx call c#auro_source_files#OpenHxxFile()
+" command! -buffer AuroCxx call c#auro_source_files#OpenCxxFile()
+" command! -buffer AuroTest call c#auro_source_files#OpenTestFile()
+" command! -buffer AuroImplHpp call c#auro_source_files#OpenImplHppFile()
+" command! -buffer AuroImplCpp call c#auro_source_files#OpenImplCppFile()
+" command! -buffer AuroImplTest call c#auro_source_files#OpenImplTestFile()
+" command! -buffer AuroFindCurrentFileIncludes call c#auro_source_files#FindCurrentFileIncludes()
 
 " nnoremap <buffer> <silent> <leader>1 :AuroHxx<cr>
 " nnoremap <buffer> <silent> <leader>2 :AuroCxx<cr>

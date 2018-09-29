@@ -392,6 +392,7 @@ sys.path.insert(0, os.path.join(vim.eval("g:auro_plugin_dir"), 'lib'))
 from testing import hello 
 from myvim.auro_source_files import c_headers, goto_includes
 from auro_path import AuroPath, possible_headers, find_includes
+from auro.vim.filename import Filename
 
 # TODO when no includes, only includes starting at 0?, search for include guard if header.
 
@@ -404,11 +405,7 @@ def expand_include_auro(snip):
 	snip.expand_anon(snippet_body)
 
 def expand_include_auro_path(snip):
-	path = AuroPath(vim.current.buffer.name)
-	namespace = ''
-	for ns in path.namespaces:
-		namespace += ns + '/'
-	snippet_body = '#include "%s"$0' % namespace
+	snippet_body = '#include "%s"$0' % Filename().namespace_str()
 	snip.expand_anon(snippet_body)
 	
 

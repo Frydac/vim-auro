@@ -1,4 +1,5 @@
 from auro_path import AuroPath, possible_headers, find_includes
+from auro.vim.filename import Filename
 from auro.c.init import *
 import vim
 
@@ -18,13 +19,16 @@ def expand_include_auro(snip):
     snippet_body = '#include "${1:auro/}$0"'
     snip.expand_anon(snippet_body)
 
-def expand_include_auro_path(snip):
-    path = AuroPath(vim.current.buffer.name)
-    namespace = ''
-    for ns in path.namespaces:
-            namespace += ns + '/'
-    snippet_body = '#include "%s"$0' % namespace
-    snip.expand_anon(snippet_body)
+def expand_include_auro_pathidi(snip):
+    #  path = AuroPath(vim.current.buffer.name)
+    path = Filename()
+    print("█ path:")
+    pprint(path)
+    #  namespace = ''
+    #  for ns in path.namespaces:
+    #          namespace += ns + '/'
+    #  snippet_body = '#include "%s"$0' % path.dirname.namespace
+    snip.expand_anon(path)
 	
 
 def add_current_cursor_pos_to_jumplist():

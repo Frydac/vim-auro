@@ -1,3 +1,4 @@
+import vim
 from auro.related_filenames_infos import infos
 from auro.vim.utils import vim_filetype
 from pathlib import PurePath, Path
@@ -44,3 +45,6 @@ class Filename():
 
     def namespace_parts(self):
         return PurePath(self.dirname.namespace).parts
+
+    def namespace_str(self):
+        return self.dirname.namespace

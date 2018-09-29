@@ -11,18 +11,28 @@ from myvim.auro_source_files import goto_includes
 sys.path.insert(0, os.path.join(vim.eval("g:auro_plugin_dir"), 'python'))
 from auro.path import AuroPath
 from auro.vim.chdir_to import chdir_to_module_dir, chdir_to_supermodule_dir, chdir_to_current_file_dir
-from auro.vim.related_files import goc_related_filename, find_files_that_include
+from auro.vim.related_files import goc_related_filename
+from auro.vim.depending_files import find_files_including
 
 endpython
 
+nmap <silent> <Plug>(auro_goc_related_filename_1) :py3 goc_related_filename(1)<cr>
+nmap <silent> <Plug>(auro_goc_related_filename_2) :py3 goc_related_filename(2)<cr>
+nmap <silent> <Plug>(auro_goc_related_filename_3) :py3 goc_related_filename(3)<cr>
+
+nmap <silent> <Plug>(auro_chdir_to_current_file_dir) :py3 chdir_to_current_file_dir()<cr>
+nmap <silent> <Plug>(auro_chdir_to_supermodule_dir)  :py3 chdir_to_supermodule_dir()<cr>
+nmap <silent> <Plug>(auro_chdir_to_module_dir)       :py3 chdir_to_module_dir()<cr>
+
+nmap <silent> <leader>1 <Plug>(auro_goc_related_filename_1)
+nmap <silent> <leader>2 <Plug>(auro_goc_related_filename_2)
+nmap <silent> <leader>3 <Plug>(auro_goc_related_filename_3)
+
+nmap <silent><leader>ad <Plug>(auro_chdir_to_current_file_dir)<cr>
+nmap <silent><leader>as <Plug>(auro_chdir_to_supermodule_dir)<cr>
+nmap <silent><leader>am <Plug>(auro_chdir_to_module_dir)<cr>
+
 nnoremap <silent><leader>ain :py3 goto_includes()<cr>
 nnoremap <silent><leader>pap :py3 print(AuroPath(vim.current.buffer.name))<cr>
-nnoremap <silent><leader>ad :py3 chdir_to_current_file_dir()<cr>
-nnoremap <silent><leader>as :py3 chdir_to_supermodule_dir()<cr>
-nnoremap <silent><leader>am :py3 chdir_to_module_dir()<cr>
 
-
-nnoremap <silent> <leader>1 :py3 goc_related_filename(1)<cr>
-nnoremap <silent> <leader>2 :py3 goc_related_filename(2)<cr>
-nnoremap <silent> <leader>3 :py3 goc_related_filename(3)<cr>
-nnoremap <silent> <leader>af :py3 find_files_that_include()<cr>
+nnoremap <silent> <leader>af :py3 find_files_including()<cr>
