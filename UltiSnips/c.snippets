@@ -275,9 +275,8 @@ endsnippet
 
 snippet int "include catch.h and auro header matching this test.cpp file"
 `!p
-snip.rv = snip.mkline(line='#include "catch.hpp"') 
-snip += ""
-snip += create_include_header(abs_path())
+snip.rv = snip.mkline(line=create_include_header(abs_path())) 
+snip += '#include "catch.hpp"'
 `
 endsnippet
 
