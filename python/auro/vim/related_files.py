@@ -40,7 +40,7 @@ def create_open_file(fn):
     """
     vim always opens a buffer, and creates a file on write if the file doesn't
     exist. This hopefully creates a more consistent experience: the file will
-    always 'fysically' exist on disk.
+    always 'physically' exist on disk.
     """
     path = Path(fn)
     if not path.exists():

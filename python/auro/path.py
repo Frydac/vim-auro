@@ -1,3 +1,7 @@
+
+# to be deprecated, though need to replace usage with auro.vim.filename
+
+
 from auro.dirname import Dirname, DirnameMatcher
 from auro.basename import Basename
 from auro.related_filenames_infos import infos

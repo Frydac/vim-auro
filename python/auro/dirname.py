@@ -1,3 +1,6 @@
+# TODO: I think better design would be to have parse functions and parse
+# objects/results, and not contain both in a class.
+
 from pathlib import PurePath, Path
 from enum import Enum
 import re

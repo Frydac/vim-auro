@@ -26,6 +26,7 @@ def _find_filetypes_of_included_header_to_test(path: AuroPath2, vim_buffer: List
     return included_header_filetypes
 
 
+#  def _find_filetypes_of_included_header_to_test(path, )
 
     #  expected_possible_include_names = set([include_path(AuroPath(header)) for header in possible_related_header_fns(path)])
     #  vim_buffer_auro_includes = find_includes(vim_buffer)[Type.Auro]
@@ -37,6 +38,8 @@ def _find_filetypes_of_included_header_to_test(path: AuroPath2, vim_buffer: List
     #              included_header_filetypes.append(ft)
     #  return included_header_filetypes
     
+def test_case_snip(filename):
+    pass
 
 def test_case_snip(path: AuroPath2, vim_buffer: List[str]):
     #  included_header_filetypes = _find_filetypes_of_included_header_to_test(path, vim_buffer)
@@ -61,7 +64,7 @@ def test_case_snip(path: AuroPath2, vim_buffer: List[str]):
 
 
 
-    return namespaces
+    #  return namespaces
     #  included_header_filetypes = _find_filetypes_of_included_header_to_test(path, vim_buffer)
     #  if len(included_header_filetypes) == 1 and included_header_filetypes[0] == Ft.c:
     #      separator = "_"

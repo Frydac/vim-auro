@@ -1,3 +1,5 @@
+#TODO: see remark dirname.py
+
 from pathlib import PurePath, Path
 from enum import Enum
 import re
