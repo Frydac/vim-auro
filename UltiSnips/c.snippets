@@ -33,7 +33,7 @@ def public_api_copyright_notice(path):
     notice=u"""/**************************************************************************
  * Name: {fn}
  *
- *  Copyright 2018 Auro Technologies. All Rights Reserved. Auro-3D and 
+ *  Copyright 2019 Auro Technologies. All Rights Reserved. Auro-3D and 
  *  the related symbols are registered trademarks of Auro Technologies. 
  *  All materials and technology contained in this work are protected 
  *  by copyright law and may not be reproduced, distributed, transmitted, 
@@ -86,13 +86,13 @@ def is_public(path):
 
 def create_include_header(path):
     classname, _, namespaces, _ = split_source_fn(path)
-    line = '#include "'
+    line = '#include <'
     for ns in namespaces:
             line += ns
             line += '/'
     if(classname.endswith("_tests")):
             classname = classname[:-6]
-    line += classname + '.hpp"'
+    line += classname + '.hpp>'
     return line
 
 def create_using_ns(path):
@@ -408,11 +408,11 @@ def expand_include(snip):
 	snip.expand_anon(snippet_body)
 
 def expand_include_auro(snip):
-	snippet_body = '#include "${1:auro/}$0"'
+	snippet_body = '#include <${1:auro/}$0>'
 	snip.expand_anon(snippet_body)
 
 def expand_include_auro_path(snip):
-	snippet_body = '#include "%s"$0' % Filename().namespace_str()
+	snippet_body = '#include <%s>$0' % Filename().namespace_str()
 	snip.expand_anon(snippet_body)
 
 def add_current_cursor_pos_to_jumplist():

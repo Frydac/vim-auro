@@ -12,7 +12,7 @@ def public_api_copyright_notice():
 //-------------------------------------------------------------------------
 // Name: 
 //
-//  Copyright 2017 Auro Technologies.  All Rights Reserved.  Auro-3D and 
+//  Copyright 2019 Auro Technologies.  All Rights Reserved.  Auro-3D and 
 //  the related symbols are registered trademarks of Auro Technologies. 
 //  All materials and technology contained in this work are protected 
 //  by copyright law and may not be reproduced, distributed, transmitted, 
