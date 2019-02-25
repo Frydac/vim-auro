@@ -12,8 +12,8 @@ class TestIncludes(unittest.TestCase):
     
     def test_find_includes(self):
         buff = ['#include <iostream>',
-                '#include "auro/bla/file.cpp"',
-                '#include "catch.hpp"']
+                '#include <auro/bla/file.cpp>',
+                '#include <catch.hpp>']
 
         includes = find_includes(buff)
 
