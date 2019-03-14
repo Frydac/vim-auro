@@ -14,6 +14,20 @@ for (auto i = 0u; i < ${1:size}; ++i)
 }
 endsnippet
 
+snippet forca "for(const auto value: container)"
+for (const auto ${1:value} : ${2:container})
+{
+	${0:${VISUAL}}
+}
+endsnippet
+
+snippet forcar "for(const auto &element: container)"
+for (const auto &${1:element} : ${2:container})
+{
+	${0:${VISUAL}}
+}
+endsnippet
+
 snippet "MS?S?" "MSS_BEGIN() MSS_END()" r
 MSS_BEGIN(${1:bool});
 ${0:${VISUAL}}
