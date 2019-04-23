@@ -1,12 +1,5 @@
 extends c
 
-snippet forr "ranged for"
-for (const auto &${1:value} : ${2:collection})
-{
-	${0:${VISUAL}}
-}
-endsnippet
-
 snippet fora "for(auto i = 0u; i < size; ++i)"
 for (auto i = 0u; i < ${1:size}; ++i)
 {
@@ -42,4 +35,6 @@ snippet un "using namespace " w
 using namespace
 endsnippet
 
-
+snippet ud "using log2::stream::Dataset;" w
+using log2::stream::Dataset;
+endsnippet

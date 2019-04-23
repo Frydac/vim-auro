@@ -56,7 +56,7 @@ def test_case_snip(path: AuroPath2, vim_buffer: List[str]):
     test_name = separator.join(namespaces)
     test_name += separator + path.basename.name
     tags = ''.join(["[%s]" % ns for ns in namespaces])
-    snip_body = "TEST_CASE(\"test %s${1: }\", \"${2:[ut]}%s${3:[${4}]}\")\n" % (test_name, tags)
+    snip_body = "TEST_CASE(\"test %s${1: }\", \"${2:[fast]}%s${3:[${4}]}\")\n" % (test_name, tags)
     snip_body += "{\n"
     snip_body += "    ${0}\n"
     snip_body += "}"
