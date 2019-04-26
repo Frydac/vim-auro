@@ -13,6 +13,7 @@ from auro.path import AuroPath
 from auro.vim.chdir_to import chdir_to_module_dir, chdir_to_supermodule_dir, chdir_to_current_file_dir
 from auro.vim.related_files import goc_related_filename
 from auro.vim.depending_files import find_files_including
+from auro.vim.plot import plot_naft_log_filename_csv
 
 endpython
 
@@ -36,3 +37,6 @@ nnoremap <silent><leader>ain :py3 goto_includes()<cr>
 nnoremap <silent><leader>pap :py3 print(AuroPath(vim.current.buffer.name))<cr>
 
 nnoremap <silent> <leader>af :py3 find_files_including()<cr>
+
+" TODO: Disabling for now, uses absolute path
+" nnoremap <silent> <leader>ap :py3 plot_naft_log_filename_csv()<cr>
