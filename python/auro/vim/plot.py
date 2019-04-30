@@ -13,12 +13,18 @@ def plot_naft_log_filename_csv():
         return
     fn = md[1]
     cwd = vim.eval("expand('%:p:h')")
+    fn_plot_script = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+            'plot.py')
+    print("fn_plot_script: {}".format(fn_plot_script))
     fn = os.path.join(cwd, fn)
-    MyOut = subprocess.Popen(['python', '/home/emile/repos/toplevel-fusion/plot.py', '-i', fn], 
-                stdout=subprocess.PIPE, 
-                stderr=subprocess.STDOUT)
+    MyOut = subprocess.Popen(
+            ['python', fn_plot_script, '-i', fn],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT)
 
     # if error, use this to print
-    stdout,stderr = MyOut.communicate()
-    print(stdout)
-    print(stderr)
+    stdout, stderr = MyOut.communicate()
+    if stderr or stdout:
+        print("stdout: {}".format(stdout))
+        print("stderr: {}".format(stderr))
