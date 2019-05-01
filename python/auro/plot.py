@@ -1,18 +1,24 @@
 import argparse
 import pandas as pd
-#  from pprint import pprint
+from pprint import pprint
+import numpy as np
 import matplotlib.pyplot as plt
 
 
-def plot(csv_fn):
-    data = pd.read_csv(csv_fn)
-    data.plot(y=0)
+def plot(csv_fn, name):
+    df = pd.read_csv(csv_fn, sep=";")
+    nr_cols = df.shape[1]
+    df.columns = ["{} (col:{})".format(name, ix) for ix in range(nr_cols)]
+    df.plot()
     plt.title(csv_fn)
     plt.show()
 
-
 def parse_args():
     parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '--name', '-n',
+        default='name',
+        help='name of the data, used in the legend of the plot')
     parser.add_argument(
         '--input_csv', '-i',
         default='.',
@@ -22,4 +28,4 @@ def parse_args():
 
 if __name__ == '__main__':
     args = parse_args()
-    plot(args.input_csv)
+    plot(args.input_csv, args.name)
