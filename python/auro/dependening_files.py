@@ -32,7 +32,7 @@ def rip_grep_cmd_files_including(filename):
     "@param filename: auro.vim.Filename"
     regex = re_include(filename)
     rg_type_filt = rg_type_filter(filename)
-    cmd = "Rg {} \"{}\"".format(rg_type_filt, regex)
+    cmd = "Rg -u {} \"{}\"".format(rg_type_filt, regex)
     return cmd
 
 
