@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 
 def plot(csv_fn, name):
-    df = pd.read_csv(csv_fn, sep=";")
+    df = pd.read_csv(csv_fn, sep=";", header=None)
     nr_cols = df.shape[1]
     df.columns = ["{} (col:{})".format(name, ix) for ix in range(nr_cols)]
     df.plot()
