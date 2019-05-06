@@ -24,7 +24,8 @@ def plot_naft_log_filename_csv():
             stderr=subprocess.STDOUT)
 
     # if error, use this to print
-    stdout, stderr = MyOut.communicate()
-    if stderr or stdout:
-        print("stdout: {}".format(stdout))
-        print("stderr: {}".format(stderr))
+    # TODO: put this in a thread
+    #  stdout, stderr = MyOut.communicate()
+    #  if stderr or stdout:
+    #      print("stdout: {}".format(stdout))
+    #      print("stderr: {}".format(stderr))
