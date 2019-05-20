@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 import threading
 import logging
+#  from PySide2.QtWidgets import QPushButton
 
 from matplotlib.backends.qt_compat import QtCore, QtWidgets, is_pyqt5
 if is_pyqt5():
@@ -20,6 +21,9 @@ logging.basicConfig(level=logging.INFO)
 #  logging.basicConfig(filename='app.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
 #  logging.basicConfig(level=logging.DEBUG)
 
+def str2bool(s):
+    return s.lower() in ('true', '1')
+
 class ApplicationWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -31,6 +35,13 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         layout.addWidget(self._canvas)
         self.addToolBar(NavigationToolbar(self._canvas, self))
         self._axes = self._canvas.figure.subplots()
+
+        sub_layout = QtWidgets.QHBoxLayout()
+        button = QtWidgets.QPushButton("clear")
+        button.clicked.connect(self.remove_all_plots)
+        sub_layout.addWidget(button)
+        sub_layout.addStretch(1)
+        layout.addLayout(sub_layout)
 
         logging.info("creating tcp server thread")
         self._stop_server_thread = False
@@ -44,12 +55,21 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     def add_plot_csv(self, csv_fn, name):
         logging.info("add_plot_csv({}, {})".format(csv_fn, name))
         df = pd.read_csv(csv_fn, sep=";", header=None)
+        #  df = pd.read_csv(csv_fn, sep=";")
         nr_cols = df.shape[1]
         # columns -> plot legend
         df.columns = ["{} (col:{})".format(name, ix) for ix in range(nr_cols)]
         # add plot to existing axes
         df.plot(ax=self._axes)
         # redraw canvas
+        self._axes.figure.canvas.draw()
+
+    def new_plot_csv(self, csv_fn, name):
+        self.remove_all_plots()
+        self.add_plot_csv(csv_fn, name)
+
+    def remove_all_plots(self):
+        self._axes.clear()
         self._axes.figure.canvas.draw()
 
     def socket_listener(self):
@@ -71,10 +91,13 @@ class ApplicationWindow(QtWidgets.QMainWindow):
                 msg = json.loads(data.decode('utf-8'))
                 if 'type' not in msg:
                     logging.error("received json msg has no 'type' key: {}".format(msg))
-                elif msg['type'] == 'add_plot_csv':
+                elif msg['type'] == 'plot_csv':
                     if 'name' not in msg:
                         logging.debug("plot name not set, setting default")
                         msg['name'] = 'no-name-set'
+                    if 'add' not in msg:
+                        logging.debug("add not set, setting default")
+                        msg['add'] = 'false'
                     return msg
                 else:
                     logging.error("msg type not supported: {}".format(msg))
@@ -82,9 +105,12 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
             def plot_csv_msg(msg):
                 if 'csv' in msg:
-                    self.add_plot_csv(msg['csv'], msg['name'])
+                    if str2bool(msg['add']):
+                        self.add_plot_csv(msg['csv'], msg['name'])
+                    else:
+                        self.new_plot_csv(msg['csv'], msg['name'])
                 else:
-                    logging.debug("add_plot_csv msg received but no 'csv' key")
+                    logging.debug("plot_csv msg received but no 'csv' key")
 
             logging.debug("receiving data")
             data = conn.recv(1024)
@@ -95,7 +121,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
                 msg = parse_data(data)
                 if not msg:
                     return
-                if msg['type'] == 'add_plot_csv':
+                if msg['type'] == 'plot_csv':
                     plot_csv_msg(msg)
 
         while not self._stop_server_thread:

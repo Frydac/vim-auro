@@ -38,5 +38,5 @@ nnoremap <silent><leader>pap :py3 print(AuroPath(vim.current.buffer.name))<cr>
 
 nnoremap <silent> <leader>af :py3 find_files_including()<cr>
 
-" TODO: Disabling for now, uses absolute path
-nnoremap <silent> <leader>ap :py3 plot_naft_log_filename_csv()<cr>
+nnoremap <silent> <leader>ap :py3 plot_naft_log_filename_csv(is_new_plot=False)<cr>
+nnoremap <silent> <leader>aap :py3 plot_naft_log_filename_csv(is_new_plot=True)<cr>
