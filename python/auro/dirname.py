@@ -21,9 +21,9 @@ class DirnameMatcher():
 
     def __str__(self):
         result = ''
-        result += 'dn_type      : ' + str(self.dn_type) + '\n'
+        #  result += 'dn_type      : ' + str(self.dn_type) + '\n'
         result += 'dn_type_expr : ' + self.dn_type_expr + '\n'
-        result += 'dir_part     : ' + self.dir_part
+        #  result += 'dir_part     : ' + self.dir_part + '\n'
         return result
 
     def __repr__(self):
@@ -68,6 +68,8 @@ class Dirname():
             dm = DirnameMatch(dn_matcher, dirname)
             if dm:
                 dirname_matches.append(dm)
+        if not dirname_matches:
+            raise Exception("No dirname matches for path '{}' and matcher expressions: \n{}".format(path, self.__dn_matchers))
         best_match = max(dirname_matches, key = lambda dm: len(dm.dir_part))
         self.type = best_match.dn_matcher.dn_type
         self.base_dir = best_match.base_dir

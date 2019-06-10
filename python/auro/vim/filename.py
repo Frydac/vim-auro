@@ -23,6 +23,8 @@ class Filename():
     Uses the user provided basname and dirname info dictionaries to provide meta information about the given path.
 
     If constructed without fn -> vim.current.buffer is used and the vim_filetype is detected not only on filename extension
+
+    TODO: this should be independent of vim?
     """
     def __init__(self, fn = None):
         self.filetype = vim_filetype(fn)
@@ -30,6 +32,8 @@ class Filename():
             fn = vim.current.buffer.name
         if not self.filetype:
             raise Exception("Can't find vim filetype for {}".format(fn))
+        if not self.filetype in parsed_infos.keys():
+            raise Exception("No path information specified for filetype '{}'".format(self.filetype))
         self.ft_info = parsed_infos[self.filetype]
         if not self.ft_info:
             raise Exception("No info defined for fn with filetype {}".format(self.filetype))
