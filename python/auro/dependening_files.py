@@ -1,6 +1,6 @@
 
 def re_c_cpp_include(filename):
-    return "include.*{}".format(filename.fn_include())
+    return "include\\s*[<\\\"]{}[>\\\"]".format(filename.fn_include())
 
 def re_ruby_require(filename):
     return "require.*{}".format(filename.fn_include_no_ext())
