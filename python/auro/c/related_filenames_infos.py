@@ -83,7 +83,10 @@ related_asd_info = {
 
 
 c_cpp_infos = [related_header_info, related_source_info, related_test_info, related_asd_info] 
+asd_infos = [related_header_info, None, None, None] 
+
 infos = {}
 infos['c'] = c_cpp_infos
 infos['cpp'] = c_cpp_infos
-
+infos['tree'] = asd_infos
+infos['asd'] = asd_infos
