@@ -81,9 +81,15 @@ related_asd_info = {
         'dirname_matchers': dirname_matchers
         }
 
+related_header_info_from_asd = {
+        'basename_mapping': [{'from': [Bt.asd],  'to' : [Bt.hpp, Bt.h]}],
+        'dirname_mapping': [{'from': [Dt.asd],   'to' : [Dt.public, Dt.protected, Dt.private]}],
+        'basename_matchers': basename_matchers,
+        'dirname_matchers': dirname_matchers
+        }
 
 c_cpp_infos = [related_header_info, related_source_info, related_test_info, related_asd_info] 
-asd_infos = [related_header_info, None, None, None] 
+asd_infos = [related_header_info_from_asd]
 
 infos = {}
 infos['c'] = c_cpp_infos
