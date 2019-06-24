@@ -3,17 +3,19 @@ from pprint import pprint
 from typing import List
 from enum import Enum
 
-Bt = Enum('BasenameTypeEnum', 'hpp cpp c h test')
+Bt = Enum('BasenameTypeEnum', 'hpp cpp c h test asd')
 
 basename_matchers = {
         Bt.hpp:  ['.hpp', '.hxx'], # cpp headers
         Bt.cpp:  ['.cpp'],         # cpp source
         Bt.h:    ['.h'],           # c headers
         Bt.c:    ['.c', '.cc'],    # c source
-        Bt.test: ['_tests.cpp']    # c and cpp test
+        Bt.test: ['_tests.cpp'],   # c and cpp test
+        Bt.asd:  ['.asd']
         }
 
-Dt = Enum('DirnametypeEnum', 'public protected private test_public test_protected test_private inc src test_inc test_src')
+
+Dt = Enum('DirnametypeEnum', 'public protected private test_public test_protected test_private inc src test_inc test_src asd')
 
 dirname_matchers = {
         Dt.public:         '{base_dir}/public/{namespace}',
@@ -22,6 +24,7 @@ dirname_matchers = {
         Dt.test_public:    '{base_dir}/test/public/{namespace}',
         Dt.test_protected: '{base_dir}/test/protected/{namespace}',
         Dt.test_private:   '{base_dir}/test/private/{namespace}',
+        Dt.asd:   '{base_dir}/asd/{namespace}',
 
         Dt.inc:            '{base_dir}/inc/{namespace}',
         Dt.src:            '{base_dir}/src/{namespace}',
@@ -30,16 +33,16 @@ dirname_matchers = {
         }
 
 related_header_info = {
-        'basename_mapping': [{'from': [Bt.cpp, Bt.test], 'to': [Bt.hpp, Bt.h]},
+        'basename_mapping': [{'from': [Bt.cpp, Bt.test, Bt.asd], 'to': [Bt.hpp, Bt.h]},
                {'from': [Bt.c],            'to': [Bt.h]}],
 
-        'dirname_mapping': [{'from': [Dt.public, Dt.test_public],       'to': [Dt.public]},
-               {'from': [Dt.protected, Dt.test_protected], 'to': [Dt.protected, Dt.public]},
-               {'from': [Dt.private],                      'to': [Dt.private, Dt.public]},
-               {'from': [Dt.test_private],                 'to': [Dt.private, Dt.protected, Dt.public]},
+        'dirname_mapping': [{'from': [Dt.public, Dt.test_public, Dt.asd],       'to': [Dt.public]},
+               {'from': [Dt.protected, Dt.test_protected, Dt.asd], 'to': [Dt.protected, Dt.public]},
+               {'from': [Dt.private, Dt.asd],                      'to': [Dt.private, Dt.public]},
+               {'from': [Dt.test_private, Dt.asd],                 'to': [Dt.private, Dt.protected, Dt.public]},
 
-               {'from': [Dt.inc, Dt.test_inc],             'to': [Dt.inc]},
-               {'from': [Dt.src, Dt.test_src],             'to': [Dt.src, Dt.inc]}],
+               {'from': [Dt.inc, Dt.test_inc, Dt.asd],             'to': [Dt.inc]},
+               {'from': [Dt.src, Dt.test_src, Dt.asd],             'to': [Dt.src, Dt.inc]}],
         'basename_matchers': basename_matchers,
         'dirname_matchers': dirname_matchers
         }
@@ -71,7 +74,15 @@ related_test_info = {
         'dirname_matchers': dirname_matchers
         }
 
-c_cpp_infos = [related_header_info, related_source_info, related_test_info] 
+related_asd_info = {
+        'basename_mapping':[{'from': [Bt.h, Bt.test, Bt.hpp], 'to': [Bt.asd]}],
+        'dirname_mapping':[{'from': [Dt.public, Dt.protected, Dt.private], 'to': [Dt.asd]}],
+        'basename_matchers': basename_matchers,
+        'dirname_matchers': dirname_matchers
+        }
+
+
+c_cpp_infos = [related_header_info, related_source_info, related_test_info, related_asd_info] 
 infos = {}
 infos['c'] = c_cpp_infos
 infos['cpp'] = c_cpp_infos
