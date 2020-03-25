@@ -42,13 +42,20 @@ class Filename():
         self.dirname = Dirname(self.ft_info[1]['dirname_matchers'], fn)
 
     def fn_include_no_ext(self):
-        return str(Path(self.dirname.namespace) / self.basename.stem).replace('\\', '/')
+        fn = ""
+        if self.dirname.namespace:
+            fn += self.dirname.namespace + "/"
+        return (fn + self.basename.stem).replace('\\', '/')
+        #  return str(Path(self.dirname.namespace) / self.basename.stem).replace('\\', '/')
 
     def fn_include(self):
         return self.fn_include_no_ext() + self.basename.ext
 
     def namespace_parts(self):
-        return PurePath(self.dirname.namespace).parts
+        if self.dirname.namespace:
+            return PurePath(self.dirname.namespace).parts
+        else:
+            return ()
 
     def namespace_str(self):
         return self.dirname.namespace

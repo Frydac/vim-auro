@@ -3,6 +3,7 @@
 
 from pathlib import PurePath, Path
 from enum import Enum
+from pprint import pprint
 import re
 
 class DirnameMatcher():
@@ -40,7 +41,11 @@ class DirnameMatch():
         self.dn_matcher = dn_matcher
         self.base_dir = ''
         self.namespace = ''
-        bd_ns_re = r'(?P<base_dir>.*)' + re.escape(dn_matcher.dir_part) + r'(?P<namespace>.*)'
+        # for some reason following line breaks my highlighting
+        #  bd_ns_re = r'(?P<base_dir>.*)' + re.escape(dn_matcher.dir_part) + r'(?P<namespace>.*)'
+        # namespace is optional, deal with that
+        test = re.escape(dn_matcher.dir_part.rstrip('/'))
+        bd_ns_re = r'(?P<base_dir>.*)' + test + r'(/(?P<namespace>.*))?'
         bd_ns_matches = re.match(bd_ns_re, dir_name)
         if bd_ns_matches:
             self.base_dir = bd_ns_matches.group('base_dir')
@@ -48,7 +53,7 @@ class DirnameMatch():
             self.dir_part = dn_matcher.dir_part
 
     def __bool__(self):
-        return bool(self.base_dir) and bool(self.namespace)
+        return bool(self.base_dir)
 
 class Dirname():
     def __init__(self, dirname_matchers, path = None):
