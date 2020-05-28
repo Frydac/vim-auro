@@ -243,7 +243,7 @@ ${1:bool} ${2:fun_name}($3)
 endsnippet
 
 snippet "MS?S?R" "MSS_BEGIN_RC() MSS_CLEANUP()MSS_END()" r
-MSS_BEGIN_RC();
+MSS_BEGIN_RC(${1:auro_ReturnCode_t});
 ${0:${VISUAL}}
 MSS_END_RC();
 endsnippet
