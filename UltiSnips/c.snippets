@@ -33,7 +33,7 @@ def public_api_copyright_notice(path):
     notice=u"""/**************************************************************************
  * Name: {fn}
  *
- *  Copyright 2019 Auro Technologies. All Rights Reserved. Auro-3D and 
+ *  Copyright 2020 Auro Technologies. All Rights Reserved. Auro-3D and 
  *  the related symbols are registered trademarks of Auro Technologies. 
  *  All materials and technology contained in this work are protected 
  *  by copyright law and may not be reproduced, distributed, transmitted, 
@@ -192,6 +192,13 @@ snip += "#define " + include_guard
 `
 endsnippet
 
+snippet afor "AURO_FOR_BEGIN()"
+AURO_FOR_BEGIN(int ${1:i} = 0, $1 < ${2:size}, ++$1);
+{
+	${0:${VISUAL}}
+}
+AURO_FOR_END();
+endsnippet
 
 # TODO: make these work from everywhere and jump to the right place
 # snippet in "#include"
@@ -271,10 +278,10 @@ snip.rv = snip.mkline(line=create_include_header(abs_path()))
 `
 endsnippet
 
-snippet int "include catch.h and auro header matching this test.cpp file"
+snippet int "include doctest.hpp and auro header (TODO: detect .h or .hpp file) matching this test.cpp file"
 `!p
 snip.rv = snip.mkline(line=create_include_header(abs_path())) 
-snip += '#include <catch.hpp>'
+snip += '#include <doctest.hpp>'
 `
 endsnippet
 
@@ -450,3 +457,4 @@ pre_expand "del_line_and_move_cursor_to_includes(snip)"
 post_jump "expand_include_auro_path(snip)"
 snippet inap "jump to includes and add #include<>"
 endsnippet
+
