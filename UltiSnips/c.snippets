@@ -369,6 +369,26 @@ snippet cenum "c style enum with c style prefix"
 `!p snip.rv = snip.mkline('} ' + create_c_struct_name(abs_path()))`$1t;
 endsnippet
 
+snippet cctor "c style ctor/dtor with c style prefix"
+`!p 
+struct_name = create_c_struct_name(abs_path())
+snip.rv = snip.mkline(struct_name + 't *' + struct_name + 't_constructor(void *dst')`$0);
+`!p
+snip.rv += snip.mkline('void ' + struct_name + 't_destructor('+ struct_name + 't *inst);')
+`
+endsnippet
+
+global !p
+def c_function_snippet():
+	struct_name = create_c_struct_name(abs_path())
+	snip_body = "${1:void} %s${2:fname}(%st *inst$3);" % (struct_name, struct_name)
+	snip.expand_anon(snip_body)
+endglobal
+post_jump "c_function_snippet()"
+snippet cf "c function declaration start"
+endsnippet
+
+#TODO move to cpp snippets
 snippet sca "static constexpr auto "
 static constexpr auto ${1:name}
 endsnippet
