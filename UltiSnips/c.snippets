@@ -372,10 +372,21 @@ endsnippet
 snippet cctor "c style ctor/dtor with c style prefix"
 `!p 
 struct_name = create_c_struct_name(abs_path())
-snip.rv = snip.mkline(struct_name + 't *' + struct_name + 't_constructor(void *dst')`$0);
+snip.rv = snip.mkline(struct_name + 't *' + struct_name + 't_construct(void *dst')`$0);
 `!p
-snip.rv += snip.mkline('void ' + struct_name + 't_destructor('+ struct_name + 't *inst);')
+snip.rv += snip.mkline('void ' + struct_name + 't_destruct('+ struct_name + 't *inst);')
 `
+endsnippet
+
+global !p
+def c_ctor_bool_snippet():
+	struct_name = create_c_struct_name(abs_path())
+	snip_body = "auro_bool_t %st_construct(%st *inst$1);\n" % (struct_name, struct_name)
+	snip_body += "void %st_destruct(%st *inst);" % (struct_name, struct_name)
+	snip.expand_anon(snip_body)
+endglobal
+post_jump "c_ctor_bool_snippet()"
+snippet cctorb "c style ctor/dtor with auro_bool_t returntype"
 endsnippet
 
 global !p
