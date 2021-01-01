@@ -45,3 +45,21 @@ endsnippet
 snippet ud "using log2::stream::Dataset;" w
 using log2::stream::Dataset;
 endsnippet
+
+# log2 related snippets
+snippet lds "log define scope"
+namespace {
+    log2::Scope scope(const std::string &name, const log2::Callback &cb = {})
+    {
+        return log::scope("${1:basename}" + name, { "${2:namespace}" }, cb);
+    }
+}
+endsnippet
+
+snippet lf "auto log_f = scope.open();"
+auto log_f = scope("${1:name}"${2:, [&](auto &a){ $3 }});
+endsnippet
+
+snippet lfa "log_f.open(name, [&](auto &a){  });"
+${1:auto log_f${2:1} = }log_f.open("${3:name}"${4:, [&](auto &a){ $5 }});
+endsnippet

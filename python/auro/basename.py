@@ -1,48 +1,11 @@
 #TODO: see remark dirname.py
 
-from pathlib import PurePath, Path
+from pathlib import PurePath
 from enum import Enum
 import re
 
-class Basename():
-    """
-    Parses a given path to its bn_type and name, for a certain set of matchers
-    """
-    def __init__(self, basename_matchers, path = None):
-        assert all(isinstance(elem, BasenameMatcher) for elem in basename_matchers)
-        self.type = None
-        # name is what is left after basename matching
-        self.name = ''
-        # stem is the full basename without ext
-        self.stem = ''
-        self.ext = ''
-        self.__bn_matchers = basename_matchers
-        if path:
-            self.parse(path)
-    
-    def parse(self, path):
-        path = PurePath(path)
-        self.stem = path.stem
-        self.ext = path.suffix
-        basename_matches = []
-        for bn_matcher in self.__bn_matchers:
-            bm = BasenameMatch(bn_matcher, path.name)
-            if bm:
-                basename_matches.append(bm)
-        # presuming the shortest name match is the actual name
-        best_match = min(basename_matches, key = lambda bm: len(bm.name))
-        self.type = best_match.bn_matcher.bn_type
-        self.name = best_match.name
-
-    def __str__(self):
-        result = ''
-        result += 'type : ' + str(self.type) + '\n'
-        result += 'name : ' + self.name
-        return result
-
-    def __repr__(self):
-        return str(self)
-
+#TODO: only uses the first match expression in the list, e.g. Bt.hpp: ['.hpp', '.hxx'] -> only .hpp is used
+# solve with list of [prefix, suffix] pairs or something
 class BasenameMatcher():
     """
     Holds and parses the user provided matcher for a certain basename type
@@ -66,7 +29,8 @@ class BasenameMatcher():
     def __str__(self):
         result = ''
         result += 'bn_type       : ' + str(self.bn_type) + '\n'
-        result += 'bn_type_exprs : ' + self.bn_type_exprs + '\n'
+        for bn_type_expr in self.bn_type_exprs:
+            result += 'bn_type_expr : ' + bn_type_expr + '\n'
         result += 'prefix        : ' + self.prefix + '\n'
         result += 'suffix        : ' + self.suffix
         return result
@@ -74,11 +38,12 @@ class BasenameMatcher():
     def __repr__(self):
         return str(self)
 
+#TODO: only uses the first match expression in the list, e.g. Bt.hpp: ['.hpp', '.hxx'] -> only .hpp is used
 class BasenameMatch():
     """
-    Tries to match one bn_matcher with a given basename
+    Parses a given path to its bn_type and name, for one BasenameMatcher
     """
-    def __init__(self, bn_matcher, basename):
+    def __init__(self, bn_matcher: BasenameMatcher, basename: str):
         assert isinstance(bn_matcher, BasenameMatcher)
         self.bn_matcher = bn_matcher
         self.basename = basename
@@ -93,4 +58,44 @@ class BasenameMatch():
 
     def __bool__(self):
         return bool(self.name)
+
+class Basename():
+    """
+    Parses a given path to its bn_type and name, for a certain set of BasenameMatchers
+    """
+    def __init__(self, basename_matchers, path = None):
+        assert all(isinstance(elem, BasenameMatcher) for elem in basename_matchers)
+        self.type = None
+        # name is what is left after basename matching
+        self.name = ''
+        # stem is the full basename without extension
+        self.stem = ''
+        # extension
+        self.ext = ''
+        self.__bn_matchers = basename_matchers
+        if path:
+            self.parse(path)
+    
+    def parse(self, path: PurePath):
+        path = PurePath(path)
+        self.stem = path.stem
+        self.ext = path.suffix
+        basename_matches = []
+        for bn_matcher in self.__bn_matchers:
+            bm = BasenameMatch(bn_matcher, path.name)
+            if bm:
+                basename_matches.append(bm)
+        # presuming the shortest name match is the actual name
+        best_match = min(basename_matches, key = lambda bm: len(bm.name))
+        self.type = best_match.bn_matcher.bn_type
+        self.name = best_match.name
+
+    def __str__(self):
+        result = ''
+        result += 'type : ' + str(self.type) + '\n'
+        result += 'name : ' + self.name
+        return result
+
+    def __repr__(self):
+        return str(self)
 

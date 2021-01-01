@@ -1,5 +1,5 @@
 
-# to be deprecated, though need to replace usage with auro.vim.filename
+# TODO: remove, to be deprecated, though need to replace usage with auro.vim.filename
 
 
 from auro.dirname import Dirname, DirnameMatcher
