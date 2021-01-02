@@ -5,7 +5,7 @@ from typing import List, Dict
 #  from enum import Enum
 #  from auro.path import AuroPath, include_path
 from auro.related_filenames import related_filenames
-from auro.c.related_filenames_infos import related_header_info2, related_source_info2, related_test_info2
+from auro.c.related_filenames_infos import related_header_info, related_source_info, related_test_info
 from pprint import pprint
 
 #  from pprint import pprint
@@ -34,7 +34,7 @@ class TestRelatedFiles(unittest.TestCase):
             "/home/emile/repos/all/comp/headphones/cpp20/private/auro/headphones/v2/Renderer.cpp",
             "/home/emile/repos/all/comp/headphones/asd/auro/headphones/v2/parameter/Gains.asd",
         ]
-        print_related_fns(fns, related_header_info2)
+        print_related_fns(fns, related_header_info)
 
     def test_to_source(self):
         fns = [
@@ -49,7 +49,7 @@ class TestRelatedFiles(unittest.TestCase):
             "/home/emile/repos/all/comp/headphones/cpp20/private/auro/headphones/v2/Renderer.hpp",
             "/home/emile/repos/all/comp/headphones/asd/auro/headphones/v2/parameter/Gains.asd",
         ]
-        print_related_fns(fns, related_source_info2)
+        print_related_fns(fns, related_source_info)
 
     def test_to_test(self):
         fns = [
@@ -66,7 +66,7 @@ class TestRelatedFiles(unittest.TestCase):
             "/home/emile/repos/all/comp/headphones/cpp11/protected/auro/headphones/v2/Renderer.cpp",
             "/home/emile/repos/all/comp/headphones/cpp20/private/auro/headphones/v2/Renderer.cpp",
         ]
-        print_related_fns(fns, related_test_info2)
+        print_related_fns(fns, related_test_info)
 
     def test_to_asd(self):
         pass

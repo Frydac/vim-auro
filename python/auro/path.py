@@ -45,6 +45,7 @@ FtMap = {
         '.md': Ft.markdown
         }
 
+# TODO: use Basename/Dirname as basis
 class AuroPath():
     """
     Extract metadata from paths organized the 'auro' way
