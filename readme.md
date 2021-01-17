@@ -95,7 +95,7 @@ Defined for filetypes c, cpp, ruby, python (not sure about python TODO review).
 
 * `<leader>af`  
   *auro find*: find all the files that include the current file.  
-  Uses the related filenames information to parse the current path (namespace/classname) and construct a ripgrep search command using the `:Rg` command for the plugin [vim-ripgrep](https://github.com/jremmen/vim-ripgrep)
+  Uses the related filenames information to parse the current path (namespace/classname) and construct a ripgrep search command using the `:Rg` command for the plugin [vim-ripgrep](https://github.com/jremmen/vim-ripgrep)  
   Note that the `:Rg` command uses the pwd to seach in.
 
 
