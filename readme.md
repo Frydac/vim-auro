@@ -1,3 +1,23 @@
+
+<!-- vim-markdown-toc GFM -->
+
+* [Vim-Auro](#vim-auro)
+    * [Installation](#installation)
+    * [Setup](#setup)
+        * [**Enable snippets.**](#enable-snippets)
+        * [Enable finding of files that include this buffer](#enable-finding-of-files-that-include-this-buffer)
+    * [Features](#features)
+    * [Usage](#usage)
+        * [Related filenames](#related-filenames)
+        * [Change vim pwd](#change-vim-pwd)
+        * [Find files including the current buffer](#find-files-including-the-current-buffer)
+        * [Snippets](#snippets)
+            * [filetype c and cpp](#filetype-c-and-cpp)
+            * [filetype cpp](#filetype-cpp)
+            * [filetype c](#filetype-c)
+
+<!-- vim-markdown-toc -->
+
 # Vim-Auro
 
 Vim plugin with utilities specific to my work environment.
