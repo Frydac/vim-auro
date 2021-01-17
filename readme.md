@@ -6,7 +6,7 @@ Vim plugin with utilities specific to my work environment.
 
 * [Installation](#installation)
 * [Setup](#setup)
-    * [**Enable snippets.**](#enable-snippets)
+    * [Enable snippets.](#enable-snippets)
     * [Enable finding of files that include this buffer](#enable-finding-of-files-that-include-this-buffer)
 * [Features](#features)
 * [Usage](#usage)
@@ -31,7 +31,7 @@ Vim plugin with utilities specific to my work environment.
 
 ## Setup
 
-### **Enable snippets.**  
+### Enable snippets.
   A folder with **UltiSnips** snippits is included, to make them work you'll need the [UltiSnips plugin](https://github.com/SirVer/ultisnips), and add something like the following to your .vimrc:
 ```
     if has('win32')
@@ -60,11 +60,11 @@ By default UltiSnips uses Tab to trigger it, but in my setup this is already tak
   * **snippets**: a number of snippets are added, some are 'smart': they use the related filenames information to generate context aware snippets.
 
 ## Usage
-### Related filenames
-Currently related filename information is defined for filetypes: c, cpp, ruby, python.  
-Shortcut keys are predefined, but can be overridden if needed (see: `vim-auro/plugin/auro_source_files.vim`)  
+Shortcut keys are predefined, some can be overridden if needed (see: `vim-auro/plugin/auro_source_files.vim`)  
 By default `<leader>` is `\`, see `:h mapleader`  
 
+### Related filenames
+Currently related filename information is defined for filetypes: c, cpp, ruby, python.  
 * `<leader>1`  
   c/cpp: open .h or .hpp file from corresponding .c, .cpp or \_tests.cpp file  
 * `<leader>2`  
@@ -100,7 +100,7 @@ Defined for filetypes c, cpp, ruby, python (not sure about python TODO review).
 
 
 ### Snippets
-  A number of snippets for the [UltiSnips plugin](https://github.com/SirVer/ultisnips) are defined. The code is currently a mess so its probably not easy to find where they are defined. I'll list a number fo them here per filetype.
+  A number of snippets for the [UltiSnips plugin](https://github.com/SirVer/ultisnips) are defined. The code is currently a mess so its probably not easy to find where they are defined and needs to be reworked. I'll list a number fo them here per filetype.
 
 #### filetype c and cpp
 
