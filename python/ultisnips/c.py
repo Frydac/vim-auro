@@ -1,5 +1,5 @@
 from auro_path import AuroPath, possible_headers, find_includes
-from auro.vim.filename import Filename
+from auro.filename import Filename
 from auro.c.init import *
 import vim
 
@@ -21,7 +21,7 @@ def expand_include_auro(snip):
 
 def expand_include_auro_pathidi(snip):
     #  path = AuroPath(vim.current.buffer.name)
-    path = Filename()
+    path = Filename(vim.current.buffer.name)
     print("█ path:")
     pprint(path)
     #  namespace = ''

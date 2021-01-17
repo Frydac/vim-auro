@@ -1,7 +1,6 @@
 from auro.related_filenames_infos import infos
-from auro.related_filenames import related_filenames
+from auro.related_filenames import related_filenames_instantiated_matchers as related_filenames
 from auro.path import AuroPath2
-from auro.vim.filename import Filename
 from auro.vim.utils import vim_filetype
 from auro.basename import BasenameMatcher
 from auro.dirname import DirnameMatcher
@@ -124,10 +123,6 @@ def get_related_filenames(key_nr):
 
     fn_buffer = vim.current.buffer.name
     return related_filenames(fn_buffer, related_fns_info)
-
-def auro_path_current_buffer():
-    bn_matchers, dn_matchers = dn_bn_matchers_current_buffer()
-    return AuroPath2(vim.current.buffer.name, bn_matchers, dn_matchers)
 
 def dn_bn_matchers_current_buffer():
     filetype = vim_filetype()

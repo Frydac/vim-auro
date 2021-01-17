@@ -85,23 +85,28 @@ def is_public(path):
     return public_path in path
 
 def create_include_header(path):
-    classname, _, namespaces, _ = split_source_fn(path)
-    line = '#include <'
-    for ns in namespaces:
-            line += ns
-            line += '/'
-    if(classname.endswith("_tests")):
-            classname = classname[:-6]
-    line += classname + '.hpp>'
+    fn = Filename(path)
+    line = '#include <' + fn.namespace() + '/' + fn.classname()
+    ext = '.h'
+    if fn.filetype == 'cpp':
+        related_headers = fn.existing_related_filenames('header')
+        if (len(related_headers) == 1):
+            if (Filename(related_headers[0]).filetype == 'cpp'):
+                ext = '.hpp'
+        elif (len(related_headers > 1)):
+            #TODO: list options
+            pass
+    line += ext + '>'
+
     return line
 
 def create_using_ns(path):
-    _, _, namespaces, _ = split_source_fn(path)
     lines = ["using namespace auro;"]
     line = "using namespace "
-    for ns in namespaces:
+    fn = Filename(path)
+    for ns in fn.namespace_parts():
         line += ns
-        if (ns != namespaces[-1]):
+        if (ns != fn.namespace_parts()[-1]):
             line += '::'
         else:
             line += ';'
@@ -109,12 +114,12 @@ def create_using_ns(path):
     return lines
 
 def create_c_struct_name(path):
-	classname, _, namespaces, _ = split_source_fn(path)
-	struct_name = ''
-	for ns in namespaces:
-		struct_name += ns + '_'
-	struct_name += classname + '_'
-	return struct_name
+    classname, _, namespaces, _ = split_source_fn(path)
+    struct_name = ''
+    for ns in namespaces:
+        struct_name += ns + '_'
+    struct_name += classname + '_'
+    return struct_name
 
 def abs_path():
     return vim.eval('expand("%:p")')
@@ -272,12 +277,6 @@ snip.rv = snip.mkline(line=create_ns_closing_line(abs_path()))
 `
 endsnippet
 
-snippet inh "include auro header matching this .cpp or tests.cpp file"
-`!p
-snip.rv = snip.mkline(line=create_include_header(abs_path())) 
-`
-endsnippet
-
 snippet int "include doctest.hpp and auro header (TODO: detect .h or .hpp file) matching this test.cpp file"
 `!p
 snip.rv = snip.mkline(line=create_include_header(abs_path())) 
@@ -426,6 +425,32 @@ snippet ull "unsigned long long" w
 unsigned long long 
 endsnippet
 
+snippet switch "Switch statement"
+switch (${1:/* condition */}) {
+	case$0
+}
+endsnippet
+
+snippet case "Switch-case"
+case ${1:/* value */}:
+	$2break;
+$0
+endsnippet
+
+snippet #ifdef "#ifndef ... #define ... #endif"
+#ifndef ${1/([A-Za-z0-9_]+).*/$1/}
+#define ${1:SYMBOL} ${2:value}
+#endif
+endsnippet
+        
+snippet main "main(){..}"
+int main(int argc, char const *argv[])
+{
+	${0:/* code */}
+	return 0;
+}
+endsnippet
+
 global !p
 import vim
 import sys
@@ -448,7 +473,7 @@ def expand_include_auro(snip):
 	snip.expand_anon(snippet_body)
 
 def expand_include_auro_path(snip):
-	snippet_body = '#include <%s>$0' % Filename().namespace_str()
+	snippet_body = '#include <%s>$0' % Filename().namespace()
 	snip.expand_anon(snippet_body)
 
 def add_current_cursor_pos_to_jumplist():
@@ -487,5 +512,11 @@ endsnippet
 pre_expand "del_line_and_move_cursor_to_includes(snip)"
 post_jump "expand_include_auro_path(snip)"
 snippet inap "jump to includes and add #include<>"
+endsnippet
+
+snippet inh "include auro header matching this .cpp or tests.cpp file"
+`!p
+snip.rv = snip.mkline(line=create_include_header(abs_path())) 
+`
 endsnippet
 
