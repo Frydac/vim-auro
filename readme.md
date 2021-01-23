@@ -5,18 +5,25 @@ Vim plugin with utilities specific to my work environment.
 <!-- vim-markdown-toc GFM -->
 
 * [Installation](#installation)
-* [Setup](#setup)
-    * [Enable snippets.](#enable-snippets)
-    * [Enable finding of files that include this buffer](#enable-finding-of-files-that-include-this-buffer)
-* [Features](#features)
-* [Usage](#usage)
+* [Dependencies and setup](#dependencies-and-setup)
+    * [UltiSnips](#ultisnips)
+    * [vim-ripgrep](#vim-ripgrep)
+* [Features and Usage](#features-and-usage)
     * [Related filenames](#related-filenames)
-    * [Change vim pwd](#change-vim-pwd)
+    * [Change vim current working directory `:pwd`](#change-vim-current-working-directory-pwd)
     * [Find files including the current buffer](#find-files-including-the-current-buffer)
     * [Snippets](#snippets)
         * [filetype c and cpp](#filetype-c-and-cpp)
         * [filetype cpp](#filetype-cpp)
         * [filetype c](#filetype-c)
+    * [Generate debug print statements](#generate-debug-print-statements)
+        * [Cpp](#cpp)
+        * [C](#c)
+        * [Ruby](#ruby)
+        * [Python](#python)
+    * [Miscellaneous](#miscellaneous)
+        * [Copy full path of current buffer into clipboard](#copy-full-path-of-current-buffer-into-clipboard)
+        * [C/Cpp put include statement for current file into yank register](#ccpp-put-include-statement-for-current-file-into-yank-register)
 
 <!-- vim-markdown-toc -->
 
@@ -29,9 +36,9 @@ Vim plugin with utilities specific to my work environment.
   Plug 'Frydac/vim-auro'
 ```
 
-## Setup
+## Dependencies and setup
 
-### Enable snippets.
+### UltiSnips
   A folder with **UltiSnips** snippits is included, to make them work you'll need the [UltiSnips plugin](https://github.com/SirVer/ultisnips), and add something like the following to your .vimrc:
 ```
     if has('win32')
@@ -49,22 +56,20 @@ By default UltiSnips uses Tab to trigger it, but in my setup this is already tak
     let g:UltiSnipsEditSplit="vertical"
 ```
 
-### Enable finding of files that include this buffer
-  This feature depends on the [vim-ripgrep](https://github.com/jremmen/vim-ripgrep) plugin. 
+### vim-ripgrep
+  The [vim-ripgrep plugin](https://github.com/jremmen/vim-ripgrep) is used to [find files including the current buffer](#find-files-including-the-current-buffer).
 
 
-## Features
-  * **related filenames**: jump to or create related files quickly
-  * **change vim pwd**: change the vim pwd to supermodule/module/current directory. Helpful for e.g. using grep like tools.
-  * **find files including the current buffer**: defined for a few filetypes, uses [vim-ripgrep](https://github.com/jremmen/vim-ripgrep) to search for files including the current buffer.
-  * **snippets**: a number of snippets are added, some are 'smart': they use the related filenames information to generate context aware snippets.
+## Features and Usage
 
-## Usage
 Shortcut keys are predefined, some can be overridden if needed (see: `vim-auro/plugin/auro_source_files.vim`)  
 By default `<leader>` is `\`, see `:h mapleader`  
 
 ### Related filenames
-Currently related filename information is defined for filetypes: c, cpp, ruby, python.  
+**Jump to or create related files quickly**  
+
+Related filename information is defined for filetypes: c, cpp, ruby, python.  
+
 * `<leader>1`  
   c/cpp: open .h or .hpp file from corresponding .c, .cpp or \_tests.cpp file  
 * `<leader>2`  
@@ -76,16 +81,22 @@ Currently related filename information is defined for filetypes: c, cpp, ruby, p
 * `<leader>4`  
   c/cpp: open .asd file from corresponding .h file  
 
-When the file to jump to doesn't exist, a prompt will ask you if you want to create that file.
+When the file to jump to doesn't exist, a prompt will ask you if you want to create that file.  
+Note: These depend on a description of the path and basename, so only works for files that match this description.  
+TODO: Need to add just jumping between files in the same directory if the full path doesn't match any in the description. Useful when browsing an external code tree without our path conventions.
 
-### Change vim pwd
-These work by running through the path of the current opened file and search for the .git file or folder.
+### Change vim current working directory `:pwd`
+**Change the vim working directory `:pwd` to supermodule/module/current directory.**  
+
+Helpful for e.g. using grep like tools.  
 
 * `<leader>as`  
-  *auro supermodule*: change current working directory to that of the supermodule containing the current file. (by finding path with .git file/folder starting from left most parent folder)
+  *auro supermodule*: change current working directory to that of the supermodule containing the current file.  
+  By finding path with .git file/folder starting from left most parent folder.
 
 * `<leader>am`  
-  *auro module*: change current working directory to that of the module containing the current file. (by finding path with .git file/folder starting from right most parent folder) 
+  *auro module*: change current working directory to that of the module containing the current file.  
+  By finding path with .git file/folder starting from right most parent folder.
 
 * `<leader>ad`  
   *auro directory*: change current working directory to that of the directory of the current file.
@@ -96,11 +107,14 @@ Defined for filetypes c, cpp, ruby, python (not sure about python TODO review).
 * `<leader>af`  
   *auro find*: find all the files that include the current file.  
   Uses the related filenames information to parse the current path (namespace/classname) and construct a ripgrep search command using the `:Rg` command for the plugin [vim-ripgrep](https://github.com/jremmen/vim-ripgrep)  
-  Note that the `:Rg` command uses the pwd to seach in.
+  Note that the `:Rg` command uses the vim current working directory to search in.
 
 
 ### Snippets
-  A number of snippets for the [UltiSnips plugin](https://github.com/SirVer/ultisnips) are defined. The code is currently a mess so its probably not easy to find where they are defined and needs to be reworked. I'll list a number fo them here per filetype.
+  A number of snippets for the [UltiSnips plugin](https://github.com/SirVer/ultisnips) are defined. 
+  Some of these are 'smart' as they use the related filename info to generate context aware content.  
+
+  Note: The code is currently a mess so its probably not easy to find where they are defined and needs to be reworked. I'll list a number fo them here per filetype.
 
 #### filetype c and cpp
 
@@ -176,6 +190,97 @@ Defined for filetypes c, cpp, ruby, python (not sure about python TODO review).
   * `MS?S?B`  
    matches to `MB`, `MSB` and `MSSB` and expands to:  
    `MSS_BEGIN_B(); MSS_END_B();`
-  
 
+### Generate debug print statements
+
+I've added some keymappings that generate debug print statements, printing the
+variable under the cursor/selection, or printing the current line and number.
+
+Notes:
+
+* I've used 'non-configurable' keymaps, if these clash for you, please let me know, I can make the configurable (or make a pullrequest of course ). 
+* They used to depend on the ['selection register'](https://vimhelp.org/change.txt.html#%7Bregister%7D) `*`, which didn't always work in all combos of vim/nvim/terminal/OS/clipboard, so now I yank them in register named `z` (which is just a register you are unlikely to use).
+
+#### Cpp
+
+* `<leader>pp`  
+  When cursor on a `word` or using the visual selection, generate:  
+  ```cpp
+  std::cout << "word: " << word << std::endl;
+  ```
+
+* `<leader>pd`  
+  *Print Debug*: Creates a new line under the current line/selection as follows:  
+  ```cpp
+  std::cout << "|| DEBUG: " << __FILE__ << ":" << __LINE__ - 1 << ": '<previous line/selection as string>'" << std::endl;  
+  ```
+  This is handy to know where the program is crashing, e.g. 'What line is causing the segfault?'
+
+#### C
+
+C doesn't have function overloads/templates.. \*shaking my head\*, so we need to specify the type.  
+Currently there are multiple mappings defined for key/format ['p', 'f', 'lf', 'u', 'lu', 'zu', 's'],  
+I'll give one example with 'f':  
+
+* `<leader>pf`  
+  When cursor on a `word` or using the visual selection, generate:  
+  ```c
+  printf("word: %f\n", word);
+  ```
+For printing integers I defined `<leader>pi` to print with format `%d` because `<leader>pd` is used for printing the debug statement.
+  
+* `<leader>pd`  
+  *Print Debug*: Creates a new line under the current line/selection as follows:  
+  ```c
+  std::cout << "|| DEBUG: " << __FILE__ << ":" << __LINE__ - 1 << ": '<previous line/selection as string>'" << std::endl;  
+  ```
+  This is handy to know where the program is crashing, e.g. 'What line is causing the segfault?'
+
+#### Ruby
+
+* `<leader>pp`  
+  *Print useing pretty printer*: When cursor on a `word` or using the visual selection, generate:
+  ```ruby
+  puts "█ word:"; pp word
+  ```
+  Which prints the content of word with `pp` which is best for hashes and bigger types, for single basic types maybe use the following.
+
+* `<leader>`pr  
+  *pr as in print*: When cursor on a `word` or using the visual selection, generate:
+  ```ruby
+  puts "█ word: #{word}"
+  ```
+
+#### Python
+
+* `<leader>pp`  
+  *Print useing pretty printer*: When cursor on a `word` or using the visual selection, generate:
+  ```python
+  print("█ word:")
+  pprint(word)
+  ```
+  Which prints the content of word with `pprint` which is best for hashes and bigger types, for single basic types maybe use the following.
+  Note: use the `pp` snippet to generate the import statement.
+
+* `<leader>`pr  
+  *pr as in print*: When cursor on a `word` or using the visual selection, generate:
+  ```python
+  print("█ word: {}".format(word))
+  ```
+
+### Miscellaneous
+
+#### Copy full path of current buffer into clipboard
+
+* `<leader>ayf`  
+  *auro yank filename*  
+  Yanks into the `+` vim register, this connects to the system clipboard if configured properly.  
+  FYI: to paste in vim from this register, in normal mode do `"+p`, in insert mode do `<ctrl-r>+`
+
+#### C/Cpp put include statement for current file into yank register
+
+* `<leader>ayi`  
+ *auro yank include*  
+  Uses the related filename information to parse namespace/classname and populates the yank `"` (default) register, you can then paste it by pressing `p` in the file/line where you want to add the include.  
+  I use this a lot when I don't know the exact path of the file I want to include, I use fzf to search for it and I open that buffer, then I use this keymap to generate/yank the include statement, jump back to the previous file (alternate buffer with `<ctrl-6>`) and paste it where it needs to go.
 

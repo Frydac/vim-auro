@@ -1,5 +1,6 @@
-nnoremap <buffer> <leader>pp viwyoprint("█<space><c-r>0:")<cr>pprint(<c-r>0)<esc>
-vnoremap <buffer> <leader>pp <esc>oprint("█<space><c-r>*:")<cr>pprint(<c-r>*)<esc>
+nnoremap <buffer> <leader>pp "zyiwoprint("█ <c-r>z:")<cr>pprint(<c-r>z)<esc>
+vnoremap <buffer> <leader>pp "zyoprint("█ <c-r>z:")<cr>pprint(<c-r>z)<esc>
 
-nnoremap <buffer> <leader>pli viwyologging.info("<c-r>0: %s", pformat(<c-r>0))<esc>
-vnoremap <buffer> <leader>pli yologging.info("<c-r>0: %s", pformat(<c-r>0))<esc>
+nnoremap <buffer> <leader>pr "zyiwoprint("█ <c-r>z:")<cr>print(<c-r>z)<esc>
+vnoremap <buffer> <leader>pr "zyoprint("█ <c-r>z: {}".format(<c-r>z))<esc>
+
