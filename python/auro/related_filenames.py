@@ -6,7 +6,7 @@ from auro.basename import Basename, BasenameMatcher
 from auro.dirname import Dirname, DirnameMatcher
 from difflib import SequenceMatcher
 import logging
-logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.INFO)
 
 
 def sort_related_fns(input_path, related_fns):
