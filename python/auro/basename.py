@@ -2,6 +2,7 @@
 
 from pathlib import PurePath
 from enum import Enum
+from pprint import pprint
 import re
 
 #TODO: only uses the first match expression in the list, e.g. Bt.hpp: ['.hpp', '.hxx'] -> only .hpp is used
@@ -51,13 +52,21 @@ class BasenameMatch():
 
     @staticmethod
     def __parse_name(bn_matcher, basename):
-        name_re = re.escape(bn_matcher.prefix) + '(?P<name>.*)' + re.escape(bn_matcher.suffix)
+        name_re = re.escape(bn_matcher.prefix) + '(?P<name>.*)' + re.escape(bn_matcher.suffix) + '$'
         name_match = re.match(name_re, basename)
         if name_match:
             return name_match.group('name')
 
     def __bool__(self):
         return bool(self.name)
+
+    def __str__(self):
+        result = ''
+        result += str(self.bn_matcher)
+        return result
+
+    def __repr__(self):
+        return str(self)
 
 class Basename():
     """
@@ -85,10 +94,20 @@ class Basename():
             bm = BasenameMatch(bn_matcher, path.name)
             if bm:
                 basename_matches.append(bm)
+        if not basename_matches:
+            raise Exception(
+                #  "No dirname matches for path '{}' and matcher expressions: \n{}".format(
+                #      path, self.__bn_matchers
+                # TODO: log to file
+                "No basename matches for path basename '{}'\n".format(path.name)
+            )
         # presuming the shortest name match is the actual name
         best_match = min(basename_matches, key = lambda bm: len(bm.name))
         self.type = best_match.bn_matcher.bn_type
         self.name = best_match.name
+
+    def valid(self):
+        return self.name != ''
 
     def __str__(self):
         result = ''

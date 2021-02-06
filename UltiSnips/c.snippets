@@ -404,14 +404,14 @@ static constexpr auto ${1:name}
 endsnippet
 
 snippet fori "c style for int i"
-for (int ${1:i} = 0; i < ${2:count}; ++$1)
+for (int ${1:i} = 0; $1 < ${2:count}; ++$1)
 {
 	${0:${VISUAL}}
 }
 endsnippet
 
 snippet forui "c style for unsigned int i"
-for (unsigned int ${1:i} = 0u; i < ${2:count}; ++$1)
+for (unsigned int ${1:i} = 0u; $1 < ${2:count}; ++$1)
 {
 	${0:${VISUAL}}
 }
@@ -521,3 +521,6 @@ snip.rv = snip.mkline(line=create_include_header(abs_path()))
 `
 endsnippet
 
+snippet td "// TODO:"
+//TODO${1:: }
+endsnippet

@@ -89,10 +89,10 @@ def goc_related_filename(key_nr):
     fns_related = related_filenames(fn_buffer, related_fns_info)
 
     if len(fns_related) == 0:
-        print("No potential related files found with:")
+        print("No potential related files found for:")
         print("* filename: " + fn_buffer)
-        print("* related_fns_info: ")
-        pprint(related_fns_info)
+        #  print("* related_fns_info: ")
+        #  pprint(related_fns_info)
         return
 
     existing_fns_related = [fn_related for fn_related in fns_related if os.path.isfile(fn_related)]

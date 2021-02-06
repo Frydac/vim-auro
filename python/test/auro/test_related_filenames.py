@@ -23,6 +23,7 @@ def print_related_fns(from_fns: List[str], info: Dict) -> None:
 class TestRelatedFiles(unittest.TestCase):
     def test_to_header(self):
         fns = [
+                "/test/audio/src/tf/log.cpp",
             "/home/emile/repos/all/comp/headphones/test/public/auro/headphones/v2/Renderer_tests.cpp",
             "/home/emile/repos/all/comp/headphones/test/protected/auro/headphones/v2/Renderer_tests.cpp",
             "/home/emile/repos/all/comp/headphones/test/private/auro/headphones/v2/Renderer_tests.cpp",
@@ -38,6 +39,7 @@ class TestRelatedFiles(unittest.TestCase):
 
     def test_to_source(self):
         fns = [
+                "test/audio/src/tf/log.hpp",
             "/home/emile/repos/all/comp/headphones/test/public/auro/headphones/v2/Renderer_tests.cpp",
             "/home/emile/repos/all/comp/headphones/test/protected/auro/headphones/v2/Renderer_tests.cpp",
             "/home/emile/repos/all/comp/headphones/test/private/auro/headphones/v2/Renderer_tests.cpp",

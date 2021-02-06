@@ -96,6 +96,7 @@ class Dirname:
     """
 
     def __init__(self, dirname_matchers, path=None):
+        self.dirname = ""
         self.type = None
         self.base_dir = ""
         self.namespace = ""
@@ -107,6 +108,7 @@ class Dirname:
 
     def parse(self, path: str):
         dirname = str(Path(path).parent)
+        self.dirname = dirname
         dirname_matches = []
         for dn_matcher in self.__dn_matchers:
             dm = DirnameMatch(dn_matcher, dirname)
@@ -114,15 +116,19 @@ class Dirname:
                 dirname_matches.append(dm)
         if not dirname_matches:
             raise Exception(
-                "No dirname matches for path '{}' and matcher expressions: \n{}".format(
-                    path, self.__dn_matchers
-                )
+                #  "No dirname matches for path '{}' and matcher expressions: \n{}".format(
+                #      path, self.__dn_matchers)
+                # TODO: log to file
+                "No dirname matches for path '{}'\n".format(path)
             )
         best_match = max(dirname_matches, key=lambda dm: len(dm.dir_part))
         self.type = best_match.dn_matcher.dn_type
         self.base_dir = best_match.base_dir
         self.namespace = best_match.namespace
         self.dir_part = best_match.dir_part
+
+    def valid(self):
+        return self.type != None
 
     def __str__(self):
         result = ""
