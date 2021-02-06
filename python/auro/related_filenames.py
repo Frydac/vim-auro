@@ -54,7 +54,7 @@ def related_filenames_instantiated_matchers(path: str, info):
     to_basename_type_enums = flatten(
         [from_to_pair['to'] for from_to_pair in info['basename_mapping'] if from_basename.type in from_to_pair['from']])
     if not to_basename_type_enums:
-        raise Exception("Can't find a basename to map to starting from: {}\n{}".format(path, from_basename))
+        raise Exception("Can't generate a basename to map to, given current mapping rules, starting from: {}\n{}".format(path, from_basename))
     #  print("█ to_basename_type_enums:")
     #  pprint(to_basename_type_enums)
     to_basename_matchers = [bn_matcher for bn_matcher in info['basename_matchers']
@@ -69,7 +69,7 @@ def related_filenames_instantiated_matchers(path: str, info):
     to_dirname_type_enums = flatten(
         [from_to_pair['to'] for from_to_pair in info['dirname_mapping'] if from_dirname.type in from_to_pair['from']])
     if not to_dirname_type_enums:
-        raise Exception("Can't find a dirnames to map to starting from:\n{}".format(from_dirname))
+        raise Exception("Can't generate a dirname to map to, given current mapping rules, starting from:\n{}".format(from_dirname))
     #  print("█ to_dirname_type_enums:")
     #  pprint(to_dirname_type_enums)
     to_dirname_matchers = [dn_matcher for dn_matcher in info['dirname_matchers']
