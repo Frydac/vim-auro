@@ -19,12 +19,9 @@ end
 let b:clang_format_cmd = b:pycmd . b:clang_path . 'clang-format.py'
 
 function! FormatFile()
+    " This is documented in the clang-format.py script
     let l:lines="all"
-    if has('python')
-        execute b:clang_format_cmd
-    elseif has('python3')
-        execute b:clang_format_cmd
-    endif
+    execute b:clang_format_cmd
 endfunction
 
 "Format from normal or visiual mode
