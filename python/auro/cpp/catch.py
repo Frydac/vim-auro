@@ -1,6 +1,10 @@
 from auro.vim.filename import Filename
 from pprint import pprint
+import re
 
+def camel_to_snake(name):
+  name = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+  return re.sub('([a-z0-9])([A-Z])', r'\1_\2', name).lower()
 
 def test_case_snip(fn: Filename):
     separator = "::"
@@ -17,9 +21,9 @@ def test_case_snip(fn: Filename):
     test_name += separator + fn.classname()
     if separator == "_":
         test_name += "_t"
-    tags = ''.join(["[%s]" % ns for ns in namespaces])
+    tags = ''.join(["[%s]" % camel_to_snake(ns) for ns in namespaces])
     snip_body = "TEST_CASE_FAST(\"test %s${1: }\", \"%s${3:[%s]}${4:[${5}]}\")\n" % (
-        test_name, tags, fn.classname())
+        test_name, tags, camel_to_snake(fn.classname()))
     snip_body += "{\n"
     snip_body += "    ${0}\n"
     snip_body += "}"
