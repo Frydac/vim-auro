@@ -59,13 +59,14 @@ class DirnameMatch:
         self.namespace = ""
         # for some reason following line breaks my highlighting
         #  bd_ns_re = r'(?P<base_dir>.*)' + re.escape(dn_matcher.dir_part) + r'(?P<namespace>.*)'
-        # namespace is optional, deal with that
         test = re.escape(dn_matcher.dir_part.rstrip("/"))
         bd_ns_re = r"(?P<base_dir>.*)" + test + r"(/(?P<namespace>.*))?"
         bd_ns_matches = re.match(bd_ns_re, dir_name)
         if bd_ns_matches:
-            self.base_dir = bd_ns_matches.group("base_dir")
-            self.namespace = bd_ns_matches.group("namespace")
+            if (bd_ns_matches.group("base_dir") is not None):
+                self.base_dir = bd_ns_matches.group("base_dir")
+            if (bd_ns_matches.group("namespace") is not None):
+                self.namespace = bd_ns_matches.group("namespace")
             self.dir_part = dn_matcher.dir_part
 
         # TODO: make log of this?

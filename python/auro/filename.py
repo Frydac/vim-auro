@@ -1,4 +1,5 @@
 from auro.related_filenames_infos import infos
+from auro.gitdir import GitDir
 from auro.dirname import Dirname, DirnameMatcher
 from auro.basename import Basename, BasenameMatcher
 from pathlib import PurePath
@@ -34,6 +35,7 @@ class Filename():
         @param ft Vim filetype (c, cpp, python, ruby, ..)
         """
         self.fn = fn
+        self.path = PurePath(fn)
         self.filetype = ft
         if not self.filetype:
             self.filetype = detect_ft(fn)
@@ -49,6 +51,7 @@ class Filename():
         # basename/diraname matchers
         self.basename = Basename(self.ft_info[1]['basename_matchers'], fn)
         self.dirname = Dirname(self.ft_info[1]['dirname_matchers'], fn)
+        self._git_modules = None
 
     def fn_include_no_ext(self):
         fn = ""
@@ -94,12 +97,19 @@ class Filename():
                 return True
         return False
 
+    def git_modules(self):
+        if not self._git_modules:
+            self._git_modules = GitDir(self.fn).modules
+        return self._git_modules
+
+
     def __str__(self):
         result = ""
         result += "* fn: {}\n".format(self.fn)
         result += "* basename:\n{}\n".format(self.basename)
         result += "* dirname:\n{}\n".format(self.dirname)
         result += "* namespace: {}\n".format(self.namespace())
+        result += "* git_modules: {}\n".format(self.git_modules())
         return result
 
     def __repr__(self):

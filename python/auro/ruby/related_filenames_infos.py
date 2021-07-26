@@ -7,10 +7,13 @@ basename_matchers = {
         Bt.test: ['_tests.rb']
         }
 
-Dt = Enum('DirTypeEnum', 'source test')
+Dt = Enum('DirTypeEnum', 'source test story qc script')
 
 dirname_matchers = {
         Dt.source: '{base_dir}/ruby/{namespace}',
+        Dt.story: '{base_dir}/story/{namespace}',
+        Dt.qc: '{base_dir}/qc/{namespace}',
+        Dt.script: '{base_dir}/script/{namespace}',
         Dt.test: '{base_dir}/test/ruby/{namespace}'
         }
 

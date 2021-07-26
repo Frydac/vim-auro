@@ -1,3 +1,87 @@
+global !p
+import vim
+from auro.filename import Filename
+from auro.ruby.init import snip_init_story, snip_init_qc_register_block, snip_init_qc_register_class, snip_init_script_register_block, snip_init_script_register_class, snip_init_ruby, snip_register_block
+
+def vim_input(message = 'input'):
+    vim.command('call inputsave()')
+    vim.command("let user_input = input('" + message + ": ')")
+    vim.command('call inputrestore()')
+    return vim.eval('user_input')
+
+def init_ruby_story(fn):
+    result = ""
+    result += "namespace :story do\n"
+    result += "    task :test do\n"
+    result += "         $2\n"
+    result += "    end\n"
+    result += "end\n"
+    return result
+
+def init_ruby_qc_block(fn):
+    print("init_ruby_qc_block")
+    # Create name, there seems to be no real convention, but needs to be unique
+    name = "QCTBD"
+    result = ""
+    result += "module %s" % name
+    result += "end"
+    result = "init_ruby_qc_block\n"
+    result += fn.dirname.dir_part
+    return result
+
+def init_ruby_qc_class(fn):
+    print("init_ruby_qc_class")
+    result = "init_ruby_qc_class\n"
+    result += fn.dirname.dir_part
+    return result
+
+def init_ruby_script(fn):
+    print("init_ruby_script")
+    result = "init_ruby_script\n"
+    result += fn
+    return result
+
+def init_ruby_ruby(fn):
+    print("init_ruby_ruby")
+    result = "init_ruby_ruby\n"
+    result += fn
+    return result
+
+def init_ruby_file(path):
+    fn = Filename(path)
+    if "story" in fn.dirname.dir_part:
+        return snip_init_story(fn)
+    elif "ruby" in fn.dirname.dir_part:
+        return snip_init_ruby(fn)
+    elif "qc" in fn.dirname.dir_part:
+        answer = vim_input("Init with register_block or register_class? (b/c): ")
+        if answer.startswith("b"):
+            return snip_init_qc_register_block(fn)
+        elif answer.startswith("c"):
+            return snip_init_qc_register_class(fn)
+        else:
+            print("ERROR: expected b or c") 
+            return ""
+    elif "script" in fn.dirname.dir_part:
+        return snip_init_script_register_block(fn)
+    else:
+        printf("ERROR: no init ruby snippet for ruby file with dir %s" % fn.dirname.dir_part)
+        return "nope"
+
+
+
+def expand_init_ruby(snip):
+    path = vim.current.buffer.name
+    snip_body = init_ruby_file(path)
+    snip.expand_anon(snip_body)
+
+def expand_register_block(snip):
+	path = vim.current.buffer.name
+	snip_body = snip_register_block(Filename(path))
+	snip.expand_anon(snip_body)
+
+endglobal
+
 snippet p "pp current word"
 pp "${VISUAL}", ${VISUAL}
 endsnippet
@@ -12,6 +96,10 @@ namespace :story do
 end
 endsnippet
 
+post_jump "expand_init_ruby(snip)"
+snippet initnew "init story/script/qc script"
+endsnippet
+
 snippet t "task"
 task :$1 do
     $2
@@ -23,4 +111,8 @@ task :$1 => :cli do
     $2
 end
 endsnippet
-	
+
+post_jump "snip_register_block(snip)"
+snippet rb "register_block()"
+endsnippet
+

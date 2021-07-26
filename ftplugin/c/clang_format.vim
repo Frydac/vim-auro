@@ -16,17 +16,17 @@ else
     finish
 end
 
-let clang_format_cmd = s:py_cmd . s:clang_path . 'clang-format.py'
+let g:clang_format_cmd = s:py_cmd . s:clang_path . 'clang-format.py'
 
 function! FormatFile()
     " This is documented in the clang-format.py script
     let l:lines="all"
-    execute clang_format_cmd
+    execute g:clang_format_cmd
 endfunction
 
 "Format from normal or visiual mode
-map <silent> <C-K> :execute clang_format_cmd<cr>
+map <silent> <C-K> :execute g:clang_format_cmd<cr>
 "Format from insert mode
-imap <silent> <C-K> <c-o>:execute clang_format_cmd<cr>
+imap <silent> <C-K> <c-o>:execute g:clang_format_cmd<cr>
 "Format whole file
 map <silent> <M-k> :call FormatFile()<cr>
