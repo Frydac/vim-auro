@@ -14,7 +14,7 @@ from auro.vim.chdir_to import chdir_to_module_dir, chdir_to_supermodule_dir, chd
 from auro.vim.related_files import goc_related_filename
 from auro.vim.depending_files import find_files_including
 from auro.vim.plot import plot_naft_log_filename_csv
-from auro.vim.filename import Filename
+from auro.filename import Filename
 
 endpython
 
@@ -44,4 +44,4 @@ nnoremap <silent> <leader>af :py3 find_files_including()<cr>
 nnoremap <silent> <leader>ap :py3 plot_naft_log_filename_csv(is_new_plot=False)<cr>
 nnoremap <silent> <leader>aap :py3 plot_naft_log_filename_csv(is_new_plot=True)<cr>
 
-nnoremap <silent> <leader>ayi :py3 vim.command('let @"="#include <' + Filename().fn_include() + '>"')<cr>
+nnoremap <silent> <leader>ayi :py3 vim.command('let @"="#include <' + Filename(vim.current.buffer.name).fn_include() + '>"')<cr>
