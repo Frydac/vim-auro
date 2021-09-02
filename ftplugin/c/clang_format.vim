@@ -2,6 +2,8 @@ let g:clang_format_fallback_style='WebKit'
 
 if has('win32')
     let s:clang_path = 'C:/Program Files (x86)/LLVM/share/clang/'
+elseif has ('macunix')
+    let s:clang_path = '/usr/local/Cellar/clang-format/12.0.1/share/clang/'
 else
     let s:clang_path = '/usr/share/clang/'
 endif
