@@ -44,11 +44,12 @@ def related_filenames(path: str, info):
 
 
 def related_filenames_instantiated_matchers(path: str, info):
+    # parse and determine this paths basename type depending on the related filename info for its language
     from_basename = Basename(info['basename_matchers'], path)
-    #  logging.info("\n█ from_basename:\n %s", pformat(from_basename))
-    from_dirname = Dirname(info['dirname_matchers'], path)
-    #  logging.info("\n█ from_dirname:\n %s", pformat(from_dirname))
+    #  print("█ from_basename:")
+    #  pprint(from_basename)
 
+    # for the given from_basename, find all the basename types that are related to it given the info (e.g. .cpp -> .h .hpp)
     #  print("█ info['basename_mapping']:")
     #  pprint(info['basename_mapping'])
     to_basename_type_enums = flatten(
@@ -64,27 +65,48 @@ def related_filenames_instantiated_matchers(path: str, info):
     #  print("█ to_basenames:")
     #  pprint(to_basenames)
 
+    # parse and determine this paths dirname type depending on the related filename info for its language
+    try:
+        from_dirname = Dirname(info['dirname_matchers'], path)
+    except Exception:
+        # if we can't parse the dirname, just fall back to same path matches
+        return related_filenames_from_same_dir(path, to_basenames)
+    #  print("█ from_dirname:")
+    #  pprint(from_dirname)
+
+    # Now given the from_dirname, find all the dirname types that are related to it
     #  print("█ info['dirname_mapping']:")
     #  pprint(info['dirname_mapping'])
     to_dirname_type_enums = flatten(
         [from_to_pair['to'] for from_to_pair in info['dirname_mapping'] if from_dirname.type in from_to_pair['from']])
+    #  print("█ info['dirname_mapping']:")
+    #  pprint(info['dirname_mapping'])
     if not to_dirname_type_enums:
-        raise Exception("Can't generate a dirname to map to, given current mapping rules, starting from:\n{}".format(from_dirname))
-    #  print("█ to_dirname_type_enums:")
-    #  pprint(to_dirname_type_enums)
-    to_dirname_matchers = [dn_matcher for dn_matcher in info['dirname_matchers']
-                           if dn_matcher.dn_type in to_dirname_type_enums]
-    to_dirnames = [create_related_dirname(
-        from_dirname, to_dn_matcher) for to_dn_matcher in to_dirname_matchers]
+        #  raise Exception("Can't generate a dirname to map to, given current mapping rules, starting from:\n{}".format(from_dirname))
+        # if we can't find a matching diranme for the current from_basename and from_dirname combo, fall back to same path matches
+        return related_filenames_from_same_dir(path, to_basenames)
+    else:
+        #  print("█ to_dirname_type_enums:")
+        #  pprint(to_dirname_type_enums)
+        to_dirname_matchers = [dn_matcher for dn_matcher in info['dirname_matchers']
+                               if dn_matcher.dn_type in to_dirname_type_enums]
+        to_dirnames = [create_related_dirname(
+            from_dirname, to_dn_matcher) for to_dn_matcher in to_dirname_matchers]
 
-    # TODO: replace product by allowed combos
-    related_filenames = [str(PurePath(dirname) / PurePath(basename))
-                         for dirname, basename in list(product(to_dirnames, to_basenames))]
+        # TODO: replace product by allowed combos
+        related_filenames = [str(PurePath(dirname) / PurePath(basename))
+                             for dirname, basename in list(product(to_dirnames, to_basenames))]
 
-    sorted_related_fns = sort_related_fns(path, related_filenames)
+        sorted_related_fns = sort_related_fns(path, related_filenames)
 
-    return sorted_related_fns
+        return sorted_related_fns
 
+def related_filenames_from_same_dir(path: str, to_basenames):
+    dirname = PurePath(path).parent
+    #  print("█ dirame:")
+    #  pprint(dirname)
+    related_filenames = [str(dirname / PurePath(basename)) for basename in to_basenames]
+    return related_filenames
 
 def create_related_dirname(from_dirname: Dirname, to_dn_matcher: DirnameMatcher):
     result = ''

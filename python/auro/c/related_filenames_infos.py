@@ -66,6 +66,13 @@ for combo in combos:
     )
 dirname_matchers[Dt.asd] = "{base_dir}/asd/{namespace}"
 
+
+##
+# Related Header Info
+#
+# related filename information to find a related header (so from something to header)
+##
+
 related_header_info = {
     # map which basenam type for the target header can be used, based on the basename type of the current buffer
     "basename_mapping": [
@@ -227,6 +234,11 @@ add_c_cpp_to_h_dn_mapping()
 add_cpp_to_hpp_dn_mapping()
 related_header_info["basename_dirname_mapping"] = basename_dirname_mapping()
 
+##
+# Related Source Info
+#
+# related filename information to find a related source file (.c .cpp) (so from something to source)
+##
 
 related_source_info = {
     "basename_mapping": [
@@ -237,7 +249,7 @@ related_source_info = {
         {"from": [Dt.public], "to": [Dt.public]},
         {"from": [Dt.protected], "to": [Dt.protected, Dt.public]},
         {"from": [Dt.private], "to": [Dt.private, Dt.protected, Dt.public]},
-        {"from": [Dt.src], "to": [Dt.inc, Dt.src]},
+        {"from": [Dt.inc], "to": [Dt.src]},
     ],
     "basename_dirname_mapping": related_header_info["basename_dirname_mapping"],
     "basename_matchers": basename_matchers,

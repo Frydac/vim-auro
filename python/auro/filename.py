@@ -30,7 +30,7 @@ related_info_map = {
         }
 
 class Filename():
-    def __init__(self, fn, ft=None):
+    def __init__(self, fn: str, ft=None):
         """
         @param ft Vim filetype (c, cpp, python, ruby, ..)
         """

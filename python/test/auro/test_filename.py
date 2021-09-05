@@ -14,33 +14,41 @@ class TestFilename(unittest.TestCase):
         #  print("█ related_headers:")
         #  pprint(related_headers)
 
-        fn_str = "/home/emile/repos/all/cli/tools/ruby/dir/fingerprint.rb"
-        print("██fn_str:")
-        pprint(fn_str)
-        fn = Filename(fn_str)
-        print("█ fn:")
-        pprint(fn)
+        #  fn_str = "/home/emile/repos/all/cli/tools/ruby/dir/fingerprint.rb"
+        #  print("██fn_str:")
+        #  pprint(fn_str)
+        #  fn = Filename(fn_str)
+        #  print("█ fn:")
+        #  pprint(fn)
 
-        fn_str = "/home/emile/repos/all/cli/tools/ruby/fingerprint.rb"
-        print("██fn_str:")
-        pprint(fn_str)
-        fn = Filename(fn_str)
-        print("█ fn:")
-        pprint(fn)
+        #  fn_str = "/home/emile/repos/all/cli/tools/ruby/fingerprint.rb"
+        #  print("██fn_str:")
+        #  pprint(fn_str)
+        #  fn = Filename(fn_str)
+        #  print("█ fn:")
+        #  pprint(fn)
 
-        fn_str = "/home/emile/repos/all/fusion/am4hp/story/am4hp106.rb"
+        #  fn_str = "/home/emile/repos/all/fusion/am4hp/story/am4hp106.rb"
+        #  print("██ fn_str:")
+        #  pprint(fn_str)
+        #  fn = Filename(fn_str)
+        #  print("█ fn:")
+        #  pprint(fn)
+        #  print("\n")
+
+        #  print("█ fn.dirname.dir_part:")
+        #  pprint(fn.dirname.dir_part)
+        #  print("█ story in fn.dirname.dir_part:")
+        #  test = "story" in fn.dirname.dir_part
+        #  pprint(test)
+
+        fn_str = "/home/emile/repos/pannersuite/Auro-Encoder/inc/AuroLoudness.h"
         print("██ fn_str:")
         pprint(fn_str)
         fn = Filename(fn_str)
         print("█ fn:")
         pprint(fn)
         print("\n")
-
-        print("█ fn.dirname.dir_part:")
-        pprint(fn.dirname.dir_part)
-        print("█ story in fn.dirname.dir_part:")
-        test = "story" in fn.dirname.dir_part
-        pprint(test)
 
 
         pass

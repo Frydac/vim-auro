@@ -73,6 +73,13 @@ class TestRelatedFiles(unittest.TestCase):
     def test_to_asd(self):
         pass
 
+    def test_same_file(self):
+        fns = [ 
+                #  "/home/emile/repos/pannersuite/Auro-Encoder/inc/AuroLoudness.h",
+                "/home/emile/repos/pannersuite/Auro-Settings/Auro-Settings-App/Src/AuroSettingsBackend.h",
+                ]
+        print_related_fns(fns, related_source_info)
+
 
 if __name__ == "__main__":
     unittest.main()
