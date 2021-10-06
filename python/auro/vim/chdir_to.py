@@ -21,6 +21,6 @@ def chdir_to_supermodule_dir():
         vim.command('silent exec "cd ' + path.supermodule_dir + '"')
         print("Changed pwd to supermodule dir: " + path.supermodule_dir)
     else:
-        print("Didn't change pwd: no supermodule_dir")
+        print("Didn't change pwd: no supermodule_dir -> trying to change to module dir instead..")
         chdir_to_module_dir()
 
