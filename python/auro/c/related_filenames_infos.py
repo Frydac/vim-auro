@@ -1,9 +1,8 @@
-from pathlib import Path
-from pprint import pprint
-from typing import List
+#  from pathlib import Path
+#  from pprint import pprint
+#  from typing import List
 from enum import Enum
 import itertools
-
 
 # Used to identify 'type' of a basename as an enum value so we can refer to it
 # later, and when the string is subtracted from the basename, the common
@@ -83,6 +82,9 @@ related_header_info = {
         {"from": [Dt.public], "to": [Dt.public, Dt.protected, Dt.private]},
         {"from": [Dt.protected], "to": [Dt.protected, Dt.private]},
         {"from": [Dt.private], "to": [Dt.private]},
+        {"from": [Dt.test_private], "to": [Dt.test_private]},
+        {"from": [Dt.test_protected], "to": [Dt.test_protected]},
+        {"from": [Dt.test_public], "to": [Dt.test_public]},
         {"from": [Dt.src], "to": [Dt.inc, Dt.src]},
     ],
     "basename_dirname_mapping": [],
@@ -249,6 +251,9 @@ related_source_info = {
         {"from": [Dt.public], "to": [Dt.public]},
         {"from": [Dt.protected], "to": [Dt.protected, Dt.public]},
         {"from": [Dt.private], "to": [Dt.private, Dt.protected, Dt.public]},
+        {"from": [Dt.test_private], "to": [Dt.test_private]},
+        {"from": [Dt.test_protected], "to": [Dt.test_protected]},
+        {"from": [Dt.test_public], "to": [Dt.test_public]},
         {"from": [Dt.inc], "to": [Dt.src]},
     ],
     "basename_dirname_mapping": related_header_info["basename_dirname_mapping"],
@@ -353,7 +358,9 @@ related_test_info = {
     "basename_mapping": [{"from": [Bt.h, Bt.hpp, Bt.c, Bt.cpp], "to": [Bt.test]}],
     "dirname_mapping": [
         {"from": [Dt.public], "to": [Dt.test_public, Dt.test_private]},
-        {"from": [Dt.protected], "to": [Dt.test_protected]},
+        {"from": [Dt.test_public], "to": [Dt.test_public]},
+        {"from": [Dt.test_private], "to": [Dt.test_private]},
+        {"from": [Dt.protected, Dt.test_protected], "to": [Dt.test_protected]},
         {"from": [Dt.private], "to": [Dt.test_private]},
         {"from": [Dt.inc], "to": [Dt.test_inc, Dt.test_src]},
         {"from": [Dt.src], "to": [Dt.test_src]},

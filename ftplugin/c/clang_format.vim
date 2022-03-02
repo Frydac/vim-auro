@@ -27,8 +27,8 @@ function! FormatFile()
 endfunction
 
 "Format from normal or visiual mode
-map <silent> <C-K> :execute g:clang_format_cmd<cr>
+map <buffer><silent> <C-K> :execute g:clang_format_cmd<cr>
 "Format from insert mode
-imap <silent> <C-K> <c-o>:execute g:clang_format_cmd<cr>
+imap <buffer><silent> <C-K> <c-o>:execute g:clang_format_cmd<cr>
 "Format whole file
-map <silent> <M-k> :call FormatFile()<cr>
+map <buffer><silent> <M-k> :call FormatFile()<cr>
