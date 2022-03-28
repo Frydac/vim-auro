@@ -14,7 +14,7 @@ elseif has ('macunix')
 else
     let s:clang_path = '/usr/share/clang/'
     " let s:clang_path = '/home/emile/temp/'
-    map <<silent><buffer> C-K> :py3f /usr/share/clang/clang-format.py<cr>
+    map <silent><buffer> <C-K> :py3f /usr/share/clang/clang-format.py<cr>
     imap <silent><buffer> <C-K> <c-o>:py3f /usr/share/clang/clang-format.py<cr>
 endif
 
