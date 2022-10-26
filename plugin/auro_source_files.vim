@@ -27,10 +27,10 @@ nnoremap <silent> <Plug>(auro_chdir_to_current_file_dir) :py3 chdir_to_current_f
 nnoremap <silent> <Plug>(auro_chdir_to_supermodule_dir)  :py3 chdir_to_supermodule_dir()<cr>
 nnoremap <silent> <Plug>(auro_chdir_to_module_dir)       :py3 chdir_to_module_dir()<cr>
 
-nmap <silent> <leader>1 <Plug>(auro_goc_related_filename_1)
-nmap <silent> <leader>2 <Plug>(auro_goc_related_filename_2)
-nmap <silent> <leader>3 <Plug>(auro_goc_related_filename_3)
-nmap <silent> <leader>4 <Plug>(auro_goc_related_filename_4)
+" nmap <silent> <leader>1 <Plug>(auro_goc_related_filename_1)
+" nmap <silent> <leader>2 <Plug>(auro_goc_related_filename_2)
+" nmap <silent> <leader>3 <Plug>(auro_goc_related_filename_3)
+" nmap <silent> <leader>4 <Plug>(auro_goc_related_filename_4)
 
 nmap <silent><leader>ad <Plug>(auro_chdir_to_current_file_dir)
 nmap <silent><leader>as <Plug>(auro_chdir_to_supermodule_dir)
